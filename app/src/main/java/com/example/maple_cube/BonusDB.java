@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,25 +35,21 @@ public class BonusDB {
         return str;
     }
 
-    // category에 해당하는 id, weight 값 찾기
-    public Map<Integer, Double> getList(String table_name, int[] category) {
-        int i = 0;
-        Map<Integer, Double> list = new HashMap<>();
+    public ArrayList<Integer[]> getList(String table_name, int[] category) {
+        ArrayList<Integer[]> list = new ArrayList<>();
         StringBuilder query;
-        Cursor cursor = null;
+        Cursor cursor;
         db = mHelper.getReadableDatabase();
 
         query = new StringBuilder("SELECT * FROM " + table_name + " WHERE category=" + category[0]);
-        for(i = 1; i < category.length; i++){
+        for(int i = 1; i < category.length; i++){
             query.append(" OR category=").append(category[i]);
         }
         cursor = db.rawQuery(query.toString(), null);
 
         if (cursor.moveToFirst()) {
-            i = 0;
             do {
-                list.put(cursor.getInt(cursor.getColumnIndex("id")), (double)cursor.getInt(cursor.getColumnIndex("weight")));
-                i++;
+                list.add(new Integer[]{cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("weight")), cursor.getInt(cursor.getColumnIndex("exception"))});
             } while (cursor.moveToNext());
         } else {
             list = null;
@@ -60,6 +57,26 @@ public class BonusDB {
         cursor.close();
         mHelper.close();
         return list;
+    }
+
+    // id에 해당하는 exception 값 찾기
+    public int getException(String table_name, int id) {
+        int exception;
+        String query;
+        Cursor cursor = null;
+        db = mHelper.getReadableDatabase();
+
+        query = ("SELECT * FROM " + table_name + " WHERE id=" + id);
+        cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            exception = cursor.getInt(cursor.getColumnIndex("exception"));
+        } else {
+            exception = 0;
+        }
+        cursor.close();
+        mHelper.close();
+        return exception;
     }
 
 }

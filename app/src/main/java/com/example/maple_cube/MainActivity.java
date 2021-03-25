@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -71,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
     private LottieAnimationView btn_auto;
     private boolean autoStop = false;
 
+    private ArrayList<Integer> potentialExceptions;
+    private int potentialTempExcetpion;
+    private ArrayList<Integer> bonusExceptions;
+    private int bonusTempExcetpion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
         potential_class = 1;
         bonus_class = 1;
         kind = 0;
+
+        potentialExceptions = new ArrayList<>();
+        potentialTempExcetpion = 0;
+        bonusExceptions = new ArrayList<>();
+        bonusTempExcetpion = 0;
 
         btn_auto.setProgress(1f);
     }
@@ -167,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // Auto로 사용할 큐브 선택
-    protected void selectCube(){
+    protected void selectCube() {
         // 0, 1, 2로 데이터를 가져온다고 가정
         // TODO
     }
@@ -178,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         final Runnable rollCube = new Runnable() {
             @Override
             public void run() {
-                switch (selection){
+                switch (selection) {
                     case red_cube:
                         cube = red_cube;
                         red_count++;
@@ -438,6 +449,8 @@ public class MainActivity extends AppCompatActivity {
         final int unique_class_up = 2;
         final int second_option_up = 3;
         final int third_option_up = 4;
+        potentialExceptions.clear();
+        potentialTempExcetpion = 0;
         // 등급업
         int randValue = (int) (Math.random() * 1000) + 1;
         switch (potential_class) {
@@ -456,19 +469,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 첫 번째 옵션
-        tv_potential_1.setText(convertPotentialText(potential_class));
+        tv_potential_1.setText(convertPotentialText(potential_class, getPotentialResult(potential_class)));
         // 두 번째 옵션 이탈율 적용
         randValue = (int) (Math.random() * 1000) + 1;
         if (randValue <= probability[cube][second_option_up])
-            tv_potential_2.setText(convertPotentialText(potential_class));
+            tv_potential_2.setText(convertPotentialText(potential_class, getPotentialResult(potential_class)));
         else
-            tv_potential_2.setText(convertPotentialText(potential_class - 1));
+            tv_potential_2.setText(convertPotentialText(potential_class - 1, getPotentialResult(potential_class - 1)));
         randValue = (int) (Math.random() * 1000) + 1;
         // 세 번째 옵션 이탈율 적용
         if (randValue <= probability[cube][third_option_up])
-            tv_potential_3.setText(convertPotentialText(potential_class));
+            tv_potential_3.setText(convertPotentialText(potential_class, getPotentialResult(potential_class)));
         else
-            tv_potential_3.setText(convertPotentialText(potential_class - 1));
+            tv_potential_3.setText(convertPotentialText(potential_class - 1, getPotentialResult(potential_class - 1)));
     }
 
     // 밑잠재 큐브 굴리기
@@ -482,6 +495,8 @@ public class MainActivity extends AppCompatActivity {
         final int unique_option_up = 1;
         final int legendary_option_up = 2;
         int option_up = -1;
+        potentialExceptions.clear();
+        potentialTempExcetpion = 0;
 
         // 등급업
         int randValue = (int) (Math.random() * 1000000) + 1;
@@ -516,29 +531,93 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 첫 번째 옵션
-        tv_bonus_1.setText(convertBonusText(bonus_class));
+        tv_bonus_1.setText(convertPotentialText(bonus_class, getPotentialResult(bonus_class)));
         // 두 번째 옵션 이탈율 적용
         randValue = (int) (Math.random() * 1000000) + 1;
         if (randValue <= probability[option_up])
-            tv_bonus_2.setText(convertBonusText(bonus_class));
+            tv_bonus_2.setText(convertPotentialText(bonus_class, getPotentialResult(bonus_class)));
         else
-            tv_bonus_2.setText(convertBonusText(bonus_class - 1));
+            tv_bonus_2.setText(convertPotentialText(bonus_class - 1, getPotentialResult(bonus_class - 1)));
         // 세 번째 옵션 이탈율 적용
         randValue = (int) (Math.random() * 1000000) + 1;
         if (randValue <= probability[option_up])
-            tv_bonus_3.setText(convertBonusText(bonus_class));
+            tv_bonus_3.setText(convertPotentialText(bonus_class, getPotentialResult(bonus_class)));
         else
-            tv_bonus_3.setText(convertBonusText(bonus_class - 1));
+            tv_bonus_3.setText(convertPotentialText(bonus_class - 1, getPotentialResult(bonus_class - 1)));
     }
 
-    // id 값을 potential.db에서 option을 text로 변환
-    protected String convertPotentialText(int current_class) {
-        return potentialDB.getOption(class_list[current_class], getWeightedRandom(potentialDB.getList(class_list[current_class], category[kind])));
+    // potential.db에서 현재 등급에 맞는 option id를 가져옴
+    protected int getPotentialResult(int current_class) {
+        ArrayList<Integer[]> list = potentialDB.getList(class_list[current_class], category[kind]);
+        Map<Integer, Double> map = new HashMap<>();
+        int exception;
+        int result;
+        // exception 검사
+        for (int i = 0; i < list.size(); i++) {
+            if (potentialExceptions.size() != 0){
+                for (int j = 0; j < potentialExceptions.size(); j++)
+                    if (!list.get(i)[2].equals(potentialExceptions.get(j)))
+                        map.put(list.get(i)[0], (double) list.get(i)[1]);
+            } else {
+                map.put(list.get(i)[0], (double) list.get(i)[1]);
+            }
+        }
+        result = getWeightedRandom(map);
+        exception = potentialDB.getException(class_list[current_class], result);
+
+        // 1개의 option과 2개의 option exception 분리
+        if (exception > 0) {
+            if (exception < 3)
+                potentialExceptions.add(exception);
+            else
+                if(potentialTempExcetpion != exception)
+                    potentialTempExcetpion = exception;
+                else
+                    potentialExceptions.add(exception);
+        }
+        return result;
     }
 
-    // id 값을 bonus.db에서 option을 text로 변환
-    protected String convertBonusText(int current_class) {
-        return bonusDB.getOption(class_list[current_class], getWeightedRandom(bonusDB.getList(class_list[current_class], category[kind])));
+    // bonus.db에서 현재 등급에 맞는 option id를 가져옴
+    protected int getBonusResult(int current_class) {
+        ArrayList<Integer[]> list = bonusDB.getList(class_list[current_class], category[kind]);
+        Map<Integer, Double> map = new HashMap<>();
+        int exception;
+        int result;
+        // exception 검사
+        for (int i = 0; i < list.size(); i++) {
+            if (bonusExceptions.size() != 0){
+                for (int j = 0; j < bonusExceptions.size(); j++)
+                    if (!list.get(i)[2].equals(bonusExceptions.get(j)))
+                        map.put(list.get(i)[0], (double) list.get(i)[1]);
+            } else {
+                map.put(list.get(i)[0], (double) list.get(i)[1]);
+            }
+        }
+        result = getWeightedRandom(map);
+        exception = bonusDB.getException(class_list[current_class], result);
+
+        // 1개의 option과 2개의 option exception 분리
+        if (exception > 0) {
+            if (exception < 3)
+                bonusExceptions.add(exception);
+            else
+            if(bonusTempExcetpion != exception)
+                bonusTempExcetpion = exception;
+            else
+                bonusExceptions.add(exception);
+        }
+        return result;
+    }
+
+    // id 값을 potential.db에서 id를 option의 text로 변환
+    protected String convertPotentialText(int current_class, int result) {
+        return potentialDB.getOption(class_list[current_class], result);
+    }
+
+    // id 값을 bonus.db에서 id를 option의 text로 변환
+    protected String convertBonusText(int current_class, int result) {
+        return bonusDB.getOption(class_list[current_class], result);
     }
 
     // DB 설정
