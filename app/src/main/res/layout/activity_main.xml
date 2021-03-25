@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_left_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_right_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_left_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_right_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <ImageButton
+        android:id="@+id/btn_select_category"
+        android:layout_width="69dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/border_rare"
+        android:scaleType="fitCenter"
+        android:padding="5dp"
+        android:src="@drawable/weapon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_potential"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/white"
+        android:textColor="@color/rare"
+        android:textSize="20sp"
+        android:text="R"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1"
+        app:layout_constraintTop_toBottomOf="@+id/btn_select_category" />
+
+    <TextView
+        android:id="@+id/tv_potential"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:padding="5dp"
+        android:textColor="@color/rare"
+        android:textStyle="bold"
+        android:text="잠재옵션"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_potential"
+        app:layout_constraintStart_toEndOf="@+id/btn_potential"
+        app:layout_constraintTop_toTopOf="@+id/btn_potential" />
+
+    <TextView
+        android:id="@+id/tv_potential_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="잠재능력 1"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1"
+        app:layout_constraintTop_toBottomOf="@+id/btn_potential" />
+
+    <TextView
+        android:id="@+id/tv_potential_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="잠재능력 2"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_potential_1" />
+
+    <TextView
+        android:id="@+id/tv_potential_3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="잠재능력 3"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_potential_2" />
+
+    <TextView
+        android:id="@+id/tv_bonus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:padding="5dp"
+        android:textColor="@color/rare"
+        android:textStyle="bold"
+        android:text="에디셔널 잠재옵션"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_bonus"
+        app:layout_constraintStart_toEndOf="@+id/btn_bonus"
+        app:layout_constraintTop_toTopOf="@+id/btn_bonus" />
+
+    <Button
+        android:id="@+id/btn_bonus"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/white"
+        android:textColor="@color/rare"
+        android:textSize="20sp"
+        android:text="R"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_potential_3" />
+
+    <TextView
+        android:id="@+id/tv_bonus_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="잠재능력 1"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1"
+        app:layout_constraintTop_toBottomOf="@+id/btn_bonus" />
+
+    <TextView
+        android:id="@+id/tv_bonus_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="잠재능력 2"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_bonus_1" />
+
+    <TextView
+        android:id="@+id/tv_bonus_3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="잠재능력 3"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_bonus_2" />
+
+
+    <ImageButton
+        android:id="@+id/btn_red_cube"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/red_cube"
+        app:layout_constraintBottom_toTopOf="@+id/tv_red_count"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1" />
+
+    <ImageButton
+        android:id="@+id/btn_black_cube"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/black_cube"
+        app:layout_constraintBottom_toTopOf="@+id/tv_black_count"
+        app:layout_constraintEnd_toStartOf="@+id/btn_bonus_cube"
+        app:layout_constraintStart_toEndOf="@+id/btn_red_cube" />
+
+    <ImageButton
+        android:id="@+id/btn_bonus_cube"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/bonus_cube"
+        app:layout_constraintBottom_toTopOf="@+id/tv_bonus_count"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_1" />
+
+    <TextView
+        android:id="@+id/tv_red_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="x0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_red_cube"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1" />
+
+    <TextView
+        android:id="@+id/tv_black_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="x0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_black_cube"
+        app:layout_constraintStart_toStartOf="@+id/btn_black_cube" />
+
+    <TextView
+        android:id="@+id/tv_bonus_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="x0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
+        app:layout_constraintStart_toStartOf="@+id/btn_bonus_cube" />
+
+    <View
+        android:id="@+id/view_top"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="20dp"
+        android:background="#000"
+        app:layout_constraintBottom_toTopOf="@+id/btn_potential"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_2"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_2" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#000"
+        app:layout_constraintBottom_toTopOf="@+id/btn_bonus"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_2"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_potential_3" />
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="#000"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_2"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_bonus_3" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="#000"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/gl_left_2"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_2"
+        app:layout_constraintTop_toTopOf="@+id/view_top" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="#000"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/gl_right_2"
+        app:layout_constraintStart_toStartOf="@+id/gl_right_2"
+        app:layout_constraintTop_toTopOf="@+id/view_top" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_red_cube"
+        app:layout_constraintStart_toStartOf="@+id/gl_left_1">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/btn_auto"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:lottie_fileName="lottie/auto.json"
+            app:lottie_loop="true" />
+
+        <TextView
+            android:id="@+id/tv_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/btn_auto"
+            android:layout_alignLeft="@id/btn_auto"
+            android:layout_alignTop="@id/btn_auto"
+            android:layout_alignEnd="@id/btn_auto"
+            android:layout_alignRight="@id/btn_auto"
+            android:layout_alignBottom="@id/btn_auto"
+            android:gravity="center"
+            android:text="AUTO"
+            android:textColor="@color/black" />
+
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

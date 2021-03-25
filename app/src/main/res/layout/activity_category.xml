@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="333dp"
+        android:layout_height="wrap_content"
+        android:background="#eeeeee"
+        android:orientation="vertical"
+        android:layout_centerInParent="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="53dp"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:text="Select category"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:stretchColumns="*"
+            android:textColor="#000000" >
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <Button
+                    android:id="@+id/btn_weapon"
+                    android:drawableLeft="@drawable/weapon"
+                    android:drawableStart="@drawable/weapon"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="무기"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_extra_weapon"
+                    android:drawableLeft="@drawable/extra_weapon"
+                    android:drawableStart="@drawable/extra_weapon"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="보조무기"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_emblem"
+                    android:drawableLeft="@drawable/emblem"
+                    android:drawableStart="@drawable/emblem"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="엠블렘"
+                    android:textSize="12sp"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btn_hat"
+                    android:drawableLeft="@drawable/hat"
+                    android:drawableStart="@drawable/hat"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="모자"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_top"
+                    android:drawableLeft="@drawable/top"
+                    android:drawableStart="@drawable/top"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="상의"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_suits"
+                    android:drawableLeft="@drawable/suits"
+                    android:drawableStart="@drawable/suits"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="한벌옷"
+                    android:textSize="12sp"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btn_pants"
+                    android:drawableLeft="@drawable/pants"
+                    android:drawableStart="@drawable/pants"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="하의"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_shoes"
+                    android:drawableLeft="@drawable/shoes"
+                    android:drawableStart="@drawable/shoes"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="신발"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_glove"
+                    android:drawableLeft="@drawable/glove"
+                    android:drawableStart="@drawable/glove"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="장갑"
+                    android:textSize="12sp"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btn_cape"
+                    android:drawableLeft="@drawable/cape"
+                    android:drawableStart="@drawable/cape"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="망토"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_shoulder"
+                    android:drawableLeft="@drawable/shoulder"
+                    android:drawableStart="@drawable/shoulder"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="어깨장식"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_belt"
+                    android:drawableLeft="@drawable/belt"
+                    android:drawableStart="@drawable/belt"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="벨트"
+                    android:textSize="12sp"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btn_face"
+                    android:drawableLeft="@drawable/face"
+                    android:drawableStart="@drawable/face"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="얼굴장식"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_eye"
+                    android:drawableLeft="@drawable/eye"
+                    android:drawableStart="@drawable/eye"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="눈장식"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_earring"
+                    android:drawableLeft="@drawable/earring"
+                    android:drawableStart="@drawable/earring"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="귀고리"
+                    android:textSize="12sp"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btn_ring"
+                    android:drawableLeft="@drawable/ring"
+                    android:drawableStart="@drawable/ring"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="반지"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_pendant"
+                    android:drawableLeft="@drawable/pendant"
+                    android:drawableStart="@drawable/pendant"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="펜던트"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/btn_machine_heart"
+                    android:drawableLeft="@drawable/machine_heart"
+                    android:drawableStart="@drawable/machine_heart"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:text="기계심장"
+                    android:textSize="12sp"/>
+            </TableRow>
+
+        </TableLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#66bdbdbd" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_Cancel"
+                android:layout_width="match_parent"
+                android:layout_height="53dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="취소"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#66bdbdbd" />
+
+            <Button
+                android:id="@+id/btn_OK"
+                android:layout_width="match_parent"
+                android:layout_height="53dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="확인"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
