@@ -1,23 +1,26 @@
-package com.example.maple_cube;
+package com.example.maple_cube.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.maple_cube.R;
+import com.example.maple_cube.database.BonusDB;
+import com.example.maple_cube.database.PotentialDB;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -71,12 +74,12 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tv_auto;
     private LottieAnimationView btn_auto;
-    private boolean autoStop = false;
+    private boolean autoStop;
 
     private ArrayList<Integer> potentialExceptions;
-    private int potentialTempExcetpion;
+    private int potentialTempException;
     private ArrayList<Integer> bonusExceptions;
-    private int bonusTempExcetpion;
+    private int bonusTempException;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,20 +127,22 @@ public class MainActivity extends AppCompatActivity {
         kind = 0;
 
         potentialExceptions = new ArrayList<>();
-        potentialTempExcetpion = 0;
+        potentialTempException = 0;
         bonusExceptions = new ArrayList<>();
-        bonusTempExcetpion = 0;
+        bonusTempException = 0;
 
+        autoStop = false;
         btn_auto.setProgress(1f);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            Intent intent;
             switch (view.getId()) {
                 // 카테고리 선택
                 case R.id.btn_select_category:
-                    Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
+                    intent = new Intent(MainActivity.this, CategoryActivity.class);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     startActivityForResult(intent, 0);
                     break;
@@ -169,19 +174,19 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 // AUTO
                 case R.id.btn_auto:
-                    setAuto(cube);
+                    if(autoStop){
+                        setAuto(-1);
+                    } else{
+                        intent = new Intent(MainActivity.this, AutoActivity_1.class);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        startActivityForResult(intent, 1);
+                    }
                     break;
             }
             setColor();
             setCount();
         }
     };
-
-    // Auto로 사용할 큐브 선택
-    protected void selectCube() {
-        // 0, 1, 2로 데이터를 가져온다고 가정
-        // TODO
-    }
 
     // Auto 기능
     protected void setAuto(final int selection) {
@@ -253,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
             btn_auto.setProgress(1f);
             btn_auto.pauseAnimation();
             tv_auto.setTextColor(getResources().getColor(R.color.black));
-
         } else {
             btn_auto.playAnimation();
             tv_auto.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -261,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // category 받아오기
+    // 타 Activity에서 data 받아오기
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -276,8 +280,11 @@ public class MainActivity extends AppCompatActivity {
                     setCount();
                 }
                 break;
-            case 1: // 등급 선택 Activity
-                // TODO
+            case 1: // AutoActivity_1
+                if (resultCode == Activity.RESULT_OK) {
+                    cube = data.getIntExtra("select", -1);
+                    setAuto(cube);
+                }
                 break;
         }
     }
@@ -441,6 +448,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // 등급 업 이펙트
+    protected void class_up(){
+        final RelativeLayout layout_class_up = findViewById(R.id.layout_class_up);
+        final LottieAnimationView lottie_class_up = findViewById(R.id.lottie_class_up);
+        layout_class_up.setVisibility(View.VISIBLE);
+        lottie_class_up.setVisibility(View.VISIBLE);
+        lottie_class_up.playAnimation();
+        lottie_class_up.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                layout_class_up.setVisibility(View.GONE);
+                lottie_class_up.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+    }
+
     // 윗잠재 큐브 굴리기
     protected void rollPotentialCube() {
         final int[][] probability = {{60, 18, 3, 10, 1}, {150, 35, 10, 20, 5}};
@@ -449,9 +487,12 @@ public class MainActivity extends AppCompatActivity {
         final int unique_class_up = 2;
         final int second_option_up = 3;
         final int third_option_up = 4;
+        int tempClass;
         potentialExceptions.clear();
-        potentialTempExcetpion = 0;
+        potentialTempException = 0;
+
         // 등급업
+        tempClass = potential_class;
         int randValue = (int) (Math.random() * 1000) + 1;
         switch (potential_class) {
             case 1:
@@ -466,6 +507,9 @@ public class MainActivity extends AppCompatActivity {
                 if (randValue <= probability[cube][unique_class_up])
                     potential_class = 4;
                 break;
+        }
+        if (tempClass != potential_class){
+            class_up();
         }
 
         // 첫 번째 옵션
@@ -495,10 +539,12 @@ public class MainActivity extends AppCompatActivity {
         final int unique_option_up = 1;
         final int legendary_option_up = 2;
         int option_up = -1;
-        potentialExceptions.clear();
-        potentialTempExcetpion = 0;
+        int tempClass;
+        bonusExceptions.clear();
+        bonusTempException = 0;
 
         // 등급업
+        tempClass = bonus_class;
         int randValue = (int) (Math.random() * 1000000) + 1;
         switch (bonus_class) {
             case 1:
@@ -513,6 +559,9 @@ public class MainActivity extends AppCompatActivity {
                 if (randValue <= probability[unique_class_up])
                     bonus_class = 4;
                 break;
+        }
+        if (tempClass != bonus_class){
+            class_up();
         }
 
         switch (bonus_class) {
@@ -531,19 +580,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 첫 번째 옵션
-        tv_bonus_1.setText(convertPotentialText(bonus_class, getPotentialResult(bonus_class)));
+        tv_bonus_1.setText(convertBonusText(bonus_class, getBonusResult(bonus_class)));
         // 두 번째 옵션 이탈율 적용
         randValue = (int) (Math.random() * 1000000) + 1;
         if (randValue <= probability[option_up])
-            tv_bonus_2.setText(convertPotentialText(bonus_class, getPotentialResult(bonus_class)));
+            tv_bonus_2.setText(convertBonusText(bonus_class, getBonusResult(bonus_class)));
         else
-            tv_bonus_2.setText(convertPotentialText(bonus_class - 1, getPotentialResult(bonus_class - 1)));
+            tv_bonus_2.setText(convertBonusText(bonus_class - 1, getBonusResult(bonus_class - 1)));
         // 세 번째 옵션 이탈율 적용
         randValue = (int) (Math.random() * 1000000) + 1;
         if (randValue <= probability[option_up])
-            tv_bonus_3.setText(convertPotentialText(bonus_class, getPotentialResult(bonus_class)));
+            tv_bonus_3.setText(convertBonusText(bonus_class, getBonusResult(bonus_class)));
         else
-            tv_bonus_3.setText(convertPotentialText(bonus_class - 1, getPotentialResult(bonus_class - 1)));
+            tv_bonus_3.setText(convertBonusText(bonus_class - 1, getBonusResult(bonus_class - 1)));
     }
 
     // potential.db에서 현재 등급에 맞는 option id를 가져옴
@@ -570,8 +619,8 @@ public class MainActivity extends AppCompatActivity {
             if (exception < 3)
                 potentialExceptions.add(exception);
             else
-                if(potentialTempExcetpion != exception)
-                    potentialTempExcetpion = exception;
+                if(potentialTempException != exception)
+                    potentialTempException = exception;
                 else
                     potentialExceptions.add(exception);
         }
@@ -602,8 +651,8 @@ public class MainActivity extends AppCompatActivity {
             if (exception < 3)
                 bonusExceptions.add(exception);
             else
-            if(bonusTempExcetpion != exception)
-                bonusTempExcetpion = exception;
+            if(bonusTempException != exception)
+                bonusTempException = exception;
             else
                 bonusExceptions.add(exception);
         }

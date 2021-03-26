@@ -1,4 +1,4 @@
-package com.example.maple_cube;
+package com.example.maple_cube.database;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,17 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class PotentialDB {
+public class BonusDB {
     SQLiteDatabase db;
-    Context mContext;
-    PotentialDBHelper mHelper;
+    Context ctx;
+    BonusDBHelper mHelper;
 
-    public PotentialDB(Context context) {
-        this.mContext = context;
-        mHelper = new PotentialDBHelper(mContext);
+    public BonusDB(Context ctx) {
+        this.ctx = ctx;
+        mHelper = new BonusDBHelper(ctx);
 
     }
 
@@ -35,6 +33,7 @@ public class PotentialDB {
         return str;
     }
 
+    // category에 해당하는 id, weight, exception 값 찾기
     public ArrayList<Integer[]> getList(String table_name, int[] category) {
         ArrayList<Integer[]> list = new ArrayList<>();
         StringBuilder query;
@@ -81,11 +80,11 @@ public class PotentialDB {
 
 }
 
-class PotentialDBHelper extends SQLiteOpenHelper {
+class BonusDBHelper extends SQLiteOpenHelper {
     Context mContext;
 
-    public PotentialDBHelper(Context context) {
-        super(context, "potential.db", null, 1);
+    public BonusDBHelper(Context context) {
+        super(context, "bonus.db", null, 1);
         mContext = context;
     }
 

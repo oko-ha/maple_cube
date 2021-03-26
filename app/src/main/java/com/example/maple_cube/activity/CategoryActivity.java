@@ -1,4 +1,4 @@
-package com.example.maple_cube;
+package com.example.maple_cube.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.Window;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+
+import com.example.maple_cube.R;
 
 public class CategoryActivity extends Activity {
     private int temp_id = -1;
