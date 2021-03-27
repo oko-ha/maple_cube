@@ -56,12 +56,14 @@ public class CategoryActivity extends Activity {
                         intent.putExtra("select", select);
                         setResult(RESULT_OK, intent);
                         finish();
+                        overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
                     } else {
                         Toast.makeText(CategoryActivity.this, "장비를 선택하세요.", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.btn_Cancel:
                     finish();
+                    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
                     break;
                 // 카테고리
                 case R.id.btn_weapon:

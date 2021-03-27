@@ -48,18 +48,18 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_bonus;
     private ImageButton btn_select_category;
 
-    private static final String[] class_list = {"normal_", "rare_", "epic_", "unique_", "legendary_"};
+    private static final String[] CLASS_LIST = {"normal_", "rare_", "epic_", "unique_", "legendary_"};
     private int potential_class;
     private int bonus_class;
     private int cube;
-    private static final int red_cube = 0;
-    private static final int black_cube = 1;
-    private static final int bonus_cube = 2;
+    private static final int RED_CUBE = 0;
+    private static final int BLACK_CUBE = 1;
+    private static final int BONUS_CUBE = 2;
     //  0  /   1   /  2   / 3 /     4     / 5  / 6 / 7  /        8        /  9   /  10
     // 무기/보조무기/엠블렘/모자/상의,한벌옷/하의/신발/장갑/망토,벨트,어깨장식/장신구/기계심장
     //0: 무기류, 1: 무기, 2: 보조무기, 3: 장비류, 4: 방어구, 5: 모자, 6: 상의, 7: 하의, 8: 신발, 9: 장갑, 10: 장신구
-    private static final int[][] category = {{0, 1}, {0, 2}, {0}, {3, 4, 5}, {3, 4, 6}, {3, 4, 7}, {3, 4, 8}, {3, 4, 9}, {3, 4}, {3, 10}, {3}};
-    private int kind;
+    private static final int[][] CATEGORIES = {{0, 1}, {0, 2}, {0}, {3, 4, 5}, {3, 4, 6}, {3, 4, 7}, {3, 4, 8}, {3, 4, 9}, {3, 4}, {3, 10}, {3}};
+    private int category;
 
     private int black_count = 0;
     private int red_count = 0;
@@ -121,10 +121,15 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_red_cube).setOnClickListener(onClickListener);
         findViewById(R.id.btn_bonus_cube).setOnClickListener(onClickListener);
 
-        cube = black_cube;
+        // Initialize
+        cube = BLACK_CUBE;
         potential_class = 1;
         bonus_class = 1;
-        kind = 0;
+        setCategoryImage(0);
+        setPotentialDefault();
+        setBonusDefault();
+        setCount();
+        setColor();
 
         potentialExceptions = new ArrayList<>();
         potentialTempException = 0;
@@ -142,9 +147,9 @@ public class MainActivity extends AppCompatActivity {
             switch (view.getId()) {
                 // 카테고리 선택
                 case R.id.btn_select_category:
-                    intent = new Intent(MainActivity.this, CategoryActivity.class);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    intent = new Intent(getApplicationContext(), CategoryActivity.class);
                     startActivityForResult(intent, 0);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
                 // 윗잠재 등급 선택
                 case R.id.btn_potential:
@@ -156,19 +161,19 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 // 레드 큐브
                 case R.id.btn_red_cube:
-                    cube = red_cube;
+                    cube = RED_CUBE;
                     red_count++;
                     rollPotentialCube();
                     break;
                 // 블랙 큐브
                 case R.id.btn_black_cube:
-                    cube = black_cube;
+                    cube = BLACK_CUBE;
                     black_count++;
                     rollPotentialCube();
                     break;
                 // 에디셔널 큐브
                 case R.id.btn_bonus_cube:
-                    cube = bonus_cube;
+                    cube = BONUS_CUBE;
                     bonus_count++;
                     rollBonusCube();
                     break;
@@ -177,9 +182,12 @@ public class MainActivity extends AppCompatActivity {
                     if(autoStop){
                         setAuto(-1);
                     } else{
-                        intent = new Intent(MainActivity.this, AutoActivity_1.class);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        intent = new Intent(getApplicationContext(), AutoActivity.class);
+                        intent.putExtra("potential_class", potential_class);
+                        intent.putExtra("bonus_class", bonus_class);
+                        intent.putExtra("category", category);
                         startActivityForResult(intent, 1);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                     break;
             }
@@ -195,17 +203,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 switch (selection) {
-                    case red_cube:
-                        cube = red_cube;
+                    case RED_CUBE:
+                        cube = RED_CUBE;
                         red_count++;
                         rollPotentialCube();
                         break;
-                    case black_cube:
-                        cube = black_cube;
+                    case BLACK_CUBE:
+                        cube = BLACK_CUBE;
                         black_count++;
                         rollPotentialCube();
                         break;
-                    case bonus_cube:
+                    case BONUS_CUBE:
                         bonus_count++;
                         rollBonusCube();
                         break;
@@ -280,14 +288,24 @@ public class MainActivity extends AppCompatActivity {
                     setCount();
                 }
                 break;
-            case 1: // AutoActivity_1
-                if (resultCode == Activity.RESULT_OK) {
-                    cube = data.getIntExtra("select", -1);
-                    setAuto(cube);
-                }
+            case 1: // AutoActivity
+//                if (resultCode == Activity.RESULT_OK) {
+//                    cube = data.getIntExtra("select", -1);
+//                    Intent intent = new Intent(this, AutoActivity.class);
+//                    intent.putExtra("cube", cube);
+//                    startPopupActivity(intent, 2);
+//                    // setAuto(cube);
+//                }
                 break;
         }
     }
+
+    // 팝업 activity 실행
+//    protected void startPopupActivity(Class<?> c, int requestCode) {
+//        Intent intent = new Intent(this, c);
+//        startActivityForResult(intent, requestCode);
+//        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//    }
 
     // 선택된 카테고리로 이미지 설정
     protected void setCategoryImage(int select) {
@@ -297,75 +315,75 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 0: // 무기
                 btn_select_category.setImageResource(R.drawable.weapon);
-                kind = 0;
+                category = 0;
                 break;
             case 1: // 보조무기
                 btn_select_category.setImageResource(R.drawable.extra_weapon);
-                kind = 1;
+                category = 1;
                 break;
             case 2: // 엠블렘
                 btn_select_category.setImageResource(R.drawable.emblem);
-                kind = 2;
+                category = 2;
                 break;
             case 3: // 모자
                 btn_select_category.setImageResource(R.drawable.hat);
-                kind = 3;
+                category = 3;
                 break;
             case 4: // 상의
                 btn_select_category.setImageResource(R.drawable.top);
-                kind = 4;
+                category = 4;
                 break;
             case 5: // 한벌옷
                 btn_select_category.setImageResource(R.drawable.suits);
-                kind = 4;
+                category = 4;
                 break;
             case 6: // 하의
                 btn_select_category.setImageResource(R.drawable.pants);
-                kind = 5;
+                category = 5;
                 break;
             case 7: // 신발
                 btn_select_category.setImageResource(R.drawable.shoes);
-                kind = 6;
+                category = 6;
                 break;
             case 8: // 장갑
                 btn_select_category.setImageResource(R.drawable.glove);
-                kind = 7;
+                category = 7;
                 break;
             case 9: // 망토
                 btn_select_category.setImageResource(R.drawable.cape);
-                kind = 8;
+                category = 8;
                 break;
             case 10: // 어깨장식
                 btn_select_category.setImageResource(R.drawable.shoulder);
-                kind = 8;
+                category = 8;
                 break;
             case 11: // 벨트
                 btn_select_category.setImageResource(R.drawable.belt);
-                kind = 8;
+                category = 8;
                 break;
             case 12: // 얼굴장식
                 btn_select_category.setImageResource(R.drawable.face);
-                kind = 9;
+                category = 9;
                 break;
             case 13: // 눈장식
                 btn_select_category.setImageResource(R.drawable.eye);
-                kind = 9;
+                category = 9;
                 break;
             case 14: // 귀고리
                 btn_select_category.setImageResource(R.drawable.earring);
-                kind = 9;
+                category = 9;
                 break;
             case 15: // 반지
                 btn_select_category.setImageResource(R.drawable.ring);
-                kind = 9;
+                category = 9;
                 break;
             case 16: // 펜던트
                 btn_select_category.setImageResource(R.drawable.pendant);
-                kind = 9;
+                category = 9;
                 break;
             case 17: // 기계심장
                 btn_select_category.setImageResource(R.drawable.machine_heart);
-                kind = 10;
+                category = 10;
                 break;
         }
     }
@@ -597,7 +615,7 @@ public class MainActivity extends AppCompatActivity {
 
     // potential.db에서 현재 등급에 맞는 option id를 가져옴
     protected int getPotentialResult(int current_class) {
-        ArrayList<Integer[]> list = potentialDB.getList(class_list[current_class], category[kind]);
+        ArrayList<Integer[]> list = potentialDB.getList(CLASS_LIST[current_class], CATEGORIES[category]);
         Map<Integer, Double> map = new HashMap<>();
         int exception;
         int result;
@@ -612,7 +630,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         result = getWeightedRandom(map);
-        exception = potentialDB.getException(class_list[current_class], result);
+        exception = potentialDB.getException(CLASS_LIST[current_class], result);
 
         // 1개의 option과 2개의 option exception 분리
         if (exception > 0) {
@@ -629,7 +647,7 @@ public class MainActivity extends AppCompatActivity {
 
     // bonus.db에서 현재 등급에 맞는 option id를 가져옴
     protected int getBonusResult(int current_class) {
-        ArrayList<Integer[]> list = bonusDB.getList(class_list[current_class], category[kind]);
+        ArrayList<Integer[]> list = bonusDB.getList(CLASS_LIST[current_class], CATEGORIES[category]);
         Map<Integer, Double> map = new HashMap<>();
         int exception;
         int result;
@@ -644,7 +662,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         result = getWeightedRandom(map);
-        exception = bonusDB.getException(class_list[current_class], result);
+        exception = bonusDB.getException(CLASS_LIST[current_class], result);
 
         // 1개의 option과 2개의 option exception 분리
         if (exception > 0) {
@@ -661,12 +679,12 @@ public class MainActivity extends AppCompatActivity {
 
     // id 값을 potential.db에서 id를 option의 text로 변환
     protected String convertPotentialText(int current_class, int result) {
-        return potentialDB.getOption(class_list[current_class], result);
+        return potentialDB.getOption(CLASS_LIST[current_class], result);
     }
 
     // id 값을 bonus.db에서 id를 option의 text로 변환
     protected String convertBonusText(int current_class, int result) {
-        return bonusDB.getOption(class_list[current_class], result);
+        return bonusDB.getOption(CLASS_LIST[current_class], result);
     }
 
     // DB 설정

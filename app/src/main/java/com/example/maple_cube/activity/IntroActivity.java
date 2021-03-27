@@ -35,8 +35,8 @@ public class IntroActivity extends AppCompatActivity {
                     public void onAnimationEnd(Drawable drawable) {
                         finish();
                         Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 });
                 return false;
