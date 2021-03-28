@@ -38,206 +38,181 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="옵션을 선택하세요."
+                android:text="등급을 선택하세요."
                 android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" >
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/light_gray" />
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/border_rare"
+                    android:padding="5dp"
+                    android:src="@drawable/weapon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="→"
+                    android:textSize="50sp" />
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/border_none_class"
+                    android:padding="5dp"
+                    android:src="@drawable/weapon" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/border_light_gray"
+                android:orientation="horizontal">
+
                 <TableLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/light_gray" />
-                    <TableRow
-                        android:id="@+id/border_option_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center" >
-
-                        <TextView
-                            android:id="@+id/tv_option_1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:textSize="20sp"
-                            android:textColor="@color/black" />
-                    </TableRow>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/light_gray" />
 
                     <TableRow
-                        android:id="@+id/border_option_3"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center" >
-
-                        <TextView
-                            android:id="@+id/tv_option_3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:textSize="20sp"
-                            android:textColor="@color/black" />
-                    </TableRow>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/light_gray" />
-
-                    <TableRow
-                        android:id="@+id/border_option_5"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center" >
-
-                        <TextView
-                            android:id="@+id/tv_option_5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:textSize="20sp"
-                            android:textColor="@color/black" />
-                    </TableRow>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/light_gray" />
-
-                    <TableRow
-                        android:id="@+id/border_option_7"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="center">
 
                         <TextView
-                            android:id="@+id/tv_option_7"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border_rare"
+                            android:gravity="center"
+                            android:text="R"
+                            android:textColor="@color/rare"
+                            android:textSize="22sp" />
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
                             android:gravity="center"
-                            android:textColor="@color/black"
+                            android:text="레어"
+                            android:textColor="@color/rare"
                             android:textSize="20sp" />
                     </TableRow>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/light_gray" />
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border_unique"
+                            android:gravity="center"
+                            android:text="U"
+                            android:textColor="@color/unique"
+                            android:textSize="22sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center"
+                            android:text="유니크"
+                            android:textColor="@color/unique"
+                            android:textSize="20sp" />
+                    </TableRow>
                 </TableLayout>
 
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:background="@color/light_gray" />
+
                 <TableLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" >
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/light_gray" />
+                    android:layout_weight="1">
 
                     <TableRow
-                        android:id="@+id/border_option_2"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center" >
-
-                        <TextView
-                            android:id="@+id/tv_option_2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:textSize="20sp"
-                            android:textColor="@color/black" />
-                    </TableRow>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/light_gray" />
-
-                    <TableRow
-                        android:id="@+id/border_option_4"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center" >
-
-                        <TextView
-                            android:id="@+id/tv_option_4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:textSize="20sp"
-                            android:textColor="@color/black" />
-                    </TableRow>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/light_gray" />
-
-                    <TableRow
-                        android:id="@+id/border_option_6"
+                        android:id="@+id/btn_option_2"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="center">
 
                         <TextView
-                            android:id="@+id/tv_option_6"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border_epic"
+                            android:gravity="center"
+                            android:text="E"
+                            android:textColor="@color/epic"
+                            android:textSize="22sp" />
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
                             android:gravity="center"
-                            android:textSize="20sp"
-                            android:textColor="@color/black" />
+                            android:text="에픽"
+                            android:textColor="@color/epic"
+                            android:textSize="20sp" />
                     </TableRow>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/light_gray" />
 
                     <TableRow
-                        android:id="@+id/border_option_8"
+                        android:id="@+id/btn_option_4"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="center">
 
                         <TextView
-                            android:id="@+id/tv_option_8"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border_legendary"
+                            android:gravity="center"
+                            android:text="L"
+                            android:textColor="@color/legendary"
+                            android:textSize="22sp" />
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
                             android:gravity="center"
-                            android:textSize="20sp"
-                            android:textColor="@color/black" />
+                            android:text="레전더리"
+                            android:textColor="@color/legendary"
+                            android:textSize="20sp" />
                     </TableRow>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/light_gray" />
                 </TableLayout>
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/light_gray" />
             </LinearLayout>
 
         </LinearLayout>

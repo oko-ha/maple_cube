@@ -3,11 +3,14 @@ package com.example.maple_cube.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,10 +28,18 @@ public class AutoActivity extends Activity {
     private int potential_class;
     private int bonus_class;
     private int category;
+    private int category_image;
 
     private int temp_id;
     private int select;
     private int viewIndex;
+
+    private int selected_cube;
+    private int selected_setting;
+    private int selected_final;
+
+    private int number;
+    private Button btn_OK;
 
     private static final String[][] OPTION_STRING = {
             {"보보○", "공공○", "마마○", "보보방", "보보공", "보공공", "보보마", "보마마"},
@@ -49,9 +60,12 @@ public class AutoActivity extends Activity {
         potential_class = intent.getIntExtra("potential_class", -1);
         bonus_class = intent.getIntExtra("bonus_class", -1);
         category = intent.getIntExtra("category", -1);
+        category_image = intent.getIntExtra("category_image", -1);
+
+        btn_OK = findViewById(R.id.btn_OK);
 
         // activity_auto
-        findViewById(R.id.btn_OK).setOnClickListener(onClickListener);
+        btn_OK.setOnClickListener(onClickListener);
         findViewById(R.id.btn_Cancel).setOnClickListener(onClickListener);
         // view_auto_cube
         findViewById(R.id.btn_red_cube).setOnClickListener(onClickListener);
@@ -98,6 +112,9 @@ public class AutoActivity extends Activity {
                     select = 2;
                     break;
                 // view_auto_option
+                case R.id.btn_option_0:
+                    selected(R.id.btn_option_0);
+                    break;
                 case R.id.btn_option_1:
                     selected(R.id.btn_option_1);
                     break;
@@ -119,8 +136,31 @@ public class AutoActivity extends Activity {
                 case R.id.btn_option_7:
                     selected(R.id.btn_option_7);
                     break;
-                case R.id.btn_option_8:
-                    selected(R.id.btn_option_8);
+                // view_auto_number
+                case R.id.btn_plus_10:
+                    plusNumber(10);
+                    break;
+                case R.id.btn_plus_100:
+                    plusNumber(100);
+                    break;
+                case R.id.btn_plus_1000:
+                    plusNumber(1000);
+                    break;
+                // view_auto_class
+                case R.id.btn_epic:
+                    selected(R.id.btn_epic);
+                    setFutureBorder(2);
+                    select = 2;
+                    break;
+                case R.id.btn_unique:
+                    selected(R.id.btn_unique);
+                    setFutureBorder(3);
+                    select = 3;
+                    break;
+                case R.id.btn_legendary:
+                    selected(R.id.btn_legendary);
+                    setFutureBorder(4);
+                    select = 4;
                     break;
             }
         }
@@ -130,10 +170,11 @@ public class AutoActivity extends Activity {
         switch (viewIndex) {
             case 0: // view_auto_cube
                 if (selection != -1) {
+                    selected_cube = selection;
                     changeView(1);
                     TextView tv_selected_cube = findViewById(R.id.tv_selected_cube);
                     ImageView iv_selected_cube = findViewById(R.id.iv_selected_cube);
-                    switch (selection) {
+                    switch (selected_cube) {
                         case RED_CUBE:
                             tv_selected_cube.setText("현재 선택된 큐브 : 레드 큐브");
                             iv_selected_cube.setImageResource(R.drawable.red_cube);
@@ -156,72 +197,70 @@ public class AutoActivity extends Activity {
                 break;
             case 1: // view_auto_setting
                 if (selection != -1) {
+                    selected_setting = selection;
+                    btn_OK.setText("확인");
                     switch (selection) {
-                        case 0: // auto_option
+                        case 0: // go to auto_option
                             changeView(2);
-                            // text 변환
-                            int index = -1;
-                            findViewById(R.id.btn_option_1).setOnClickListener(onClickListener);
-                            findViewById(R.id.btn_option_2).setOnClickListener(onClickListener);
-                            findViewById(R.id.btn_option_3).setOnClickListener(onClickListener);
-                            findViewById(R.id.btn_option_4).setOnClickListener(onClickListener);
-                            findViewById(R.id.btn_option_5).setOnClickListener(onClickListener);
-                            findViewById(R.id.btn_option_6).setOnClickListener(onClickListener);
-                            switch (category){
-                                case 0: case 1:
-                                    index = 0;
-                                    findViewById(R.id.btn_option_7).setOnClickListener(onClickListener);
-                                    findViewById(R.id.btn_option_8).setOnClickListener(onClickListener);
+                            final int[] CATEGORY_INDEX = {0, 0, 1, 3, 2, 2, 2, 4, 2, 5, 2};
+                            int index = CATEGORY_INDEX[category];
+                            int max_i = 6;
+                            // set OnClickListener
+                            if (index == 0 || index == 3 || index == 5) {
+                                max_i = 8;
+                            }
+                            for (int i = 0; i < max_i; i++)
+                                findViewById(getResources().getIdentifier("btn_option_" + i, "id", getPackageName())).setOnClickListener(onClickListener);
+                            // set TextView
+                            TextView[] tv_option = new TextView[8];
+                            for (int i = 0; i < max_i; i++) {
+                                tv_option[i] = findViewById(getResources().getIdentifier("tv_option_" + i, "id", getPackageName()));
+                                tv_option[i].setText(OPTION_STRING[index][i]);
+                            }
+                            break;
+                        case 1: // go to auto_number
+                            changeView(3);
+                            ImageView iv_selected_cube = findViewById(R.id.iv_selected_cube);
+                            switch (selected_cube) {
+                                case RED_CUBE:
+                                    iv_selected_cube.setImageResource(R.drawable.red_cube);
                                     break;
-                                case 2:
-                                    index = 1;
+                                case BLACK_CUBE:
+                                    iv_selected_cube.setImageResource(R.drawable.black_cube);
                                     break;
-                                case 4: case 5: case 6: case 8: case 10:
-                                    index = 2;
-                                    break;
-                                case 3:
-                                    index = 3;
-                                    findViewById(R.id.btn_option_7).setOnClickListener(onClickListener);
-                                    findViewById(R.id.btn_option_8).setOnClickListener(onClickListener);
-                                    break;
-                                case 7:
-                                    index = 4;
-                                    break;
-                                case 9:
-                                    index = 5;
-                                    findViewById(R.id.btn_option_7).setOnClickListener(onClickListener);
-                                    findViewById(R.id.btn_option_8).setOnClickListener(onClickListener);
+                                case BONUS_CUBE:
+                                    iv_selected_cube.setImageResource(R.drawable.bonus_cube);
                                     break;
                             }
-                            TextView tv_option_1 = findViewById(R.id.tv_option_1);
-                            TextView tv_option_2 = findViewById(R.id.tv_option_2);
-                            TextView tv_option_3 = findViewById(R.id.tv_option_3);
-                            TextView tv_option_4 = findViewById(R.id.tv_option_4);
-                            TextView tv_option_5 = findViewById(R.id.tv_option_5);
-                            TextView tv_option_6 = findViewById(R.id.tv_option_6);
-                            TextView tv_option_7 = findViewById(R.id.tv_option_7);
-                            TextView tv_option_8 = findViewById(R.id.tv_option_8);
-
-                            tv_option_1.setText(OPTION_STRING[index][0]);
-                            tv_option_2.setText(OPTION_STRING[index][1]);
-                            tv_option_3.setText(OPTION_STRING[index][2]);
-                            tv_option_4.setText(OPTION_STRING[index][3]);
-                            tv_option_5.setText(OPTION_STRING[index][4]);
-                            tv_option_6.setText(OPTION_STRING[index][5]);
-                            tv_option_7.setText(OPTION_STRING[index][6]);
-                            tv_option_8.setText(OPTION_STRING[index][7]);
+                            number = 0;
+                            findViewById(R.id.btn_plus_10).setOnClickListener(onClickListener);
+                            findViewById(R.id.btn_plus_100).setOnClickListener(onClickListener);
+                            findViewById(R.id.btn_plus_1000).setOnClickListener(onClickListener);
                             break;
-                        case 1: // auto_number
-                            // changeView(3);
-                            // TODO
-                            break;
-                        case 2: // auto_class
-                            // changeView(4);
-                            // TODO
+                        case 2: // go to auto_class
+                            changeView(4);
+                            setCategoryImage();
+                            findViewById(R.id.btn_epic).setOnClickListener(onClickListener);
+                            findViewById(R.id.btn_unique).setOnClickListener(onClickListener);
+                            findViewById(R.id.btn_legendary).setOnClickListener(onClickListener);
                             break;
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "조건을 선택하세요.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 2: // view_auto_option
+                // TODO
+                break;
+            case 3: // view_auto_number
+                // TODO
+                break;
+            case 4: // view_auto_class
+                if (selection != -1) {
+                    selected_final = selection;
+                    // 데이터 넘겨주기
+                } else {
+                    Toast.makeText(getApplicationContext(), "등급을 선택하세요.", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -253,6 +292,12 @@ public class AutoActivity extends Activity {
             case 2: // view_auto_option
                 view = inflater.inflate(R.layout.view_auto_option, frame, false);
                 break;
+            case 3: // view_auto_number
+                view = inflater.inflate(R.layout.view_auto_number, frame, false);
+                break;
+            case 4:// view_auto_class
+                view = inflater.inflate(R.layout.view_auto_class, frame, false);
+                break;
         }
 
         // FrameLayout에 뷰 추가.
@@ -261,11 +306,150 @@ public class AutoActivity extends Activity {
         }
     }
 
+    // btn_plus로 number 제어
+    protected void plusNumber(int plus) {
+        EditText et_number = findViewById(R.id.et_number);
+        if (!et_number.getText().toString().equals("")) {
+            number = Integer.parseInt(et_number.getText().toString());
+        }
+        number += plus;
+        if (number > 9999) {
+            Toast.makeText(getApplicationContext(), "1 ~ 9999 사이의 값만 가능합니다. ", Toast.LENGTH_SHORT).show();
+            number -= plus;
+        }
+        String text = Integer.toString(number);
+        et_number.setText(text);
+    }
+
+    // 선택 테두리 설정
     protected void selected(int id) {
         if (temp_id != -1) {
             findViewById(temp_id).setBackgroundColor(Color.TRANSPARENT);
         }
         findViewById(id).setBackground(ContextCompat.getDrawable(this, R.drawable.border_selected));
         temp_id = id;
+    }
+
+    // view_auto_class에서 image 처리
+    protected void setCategoryImage() {
+        ImageView current_image = findViewById(R.id.current_image);
+        ImageView future_image = findViewById(R.id.future_image);
+
+        // 테두리 설정
+        int current_class;
+        if (selected_cube == BONUS_CUBE)
+            current_class = bonus_class;
+        else
+            current_class = potential_class;
+
+        switch (current_class) {
+            case 1:
+                current_image.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_rare));
+                break;
+            case 2:
+                current_image.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_epic));
+                break;
+            case 3:
+                current_image.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_unique));
+                break;
+            case 4:
+                current_image.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_legendary));
+                break;
+        }
+
+        // 이미지 설정
+        switch (category_image) {
+            case -1:
+                Toast.makeText(this, "Error with select value :-1", Toast.LENGTH_SHORT).show();
+                break;
+            case 0: // 무기
+                current_image.setImageResource(R.drawable.weapon);
+                future_image.setImageResource(R.drawable.weapon);
+                break;
+            case 1: // 보조무기
+                current_image.setImageResource(R.drawable.extra_weapon);
+                future_image.setImageResource(R.drawable.extra_weapon);
+                break;
+            case 2: // 엠블렘
+                current_image.setImageResource(R.drawable.emblem);
+                future_image.setImageResource(R.drawable.emblem);
+                break;
+            case 3: // 모자
+                current_image.setImageResource(R.drawable.hat);
+                future_image.setImageResource(R.drawable.hat);
+                break;
+            case 4: // 상의
+                current_image.setImageResource(R.drawable.top);
+                future_image.setImageResource(R.drawable.top);
+                break;
+            case 5: // 한벌옷
+                current_image.setImageResource(R.drawable.suits);
+                future_image.setImageResource(R.drawable.suits);
+                break;
+            case 6: // 하의
+                current_image.setImageResource(R.drawable.pants);
+                future_image.setImageResource(R.drawable.pants);
+                break;
+            case 7: // 신발
+                current_image.setImageResource(R.drawable.shoes);
+                future_image.setImageResource(R.drawable.shoes);
+                break;
+            case 8: // 장갑
+                current_image.setImageResource(R.drawable.glove);
+                future_image.setImageResource(R.drawable.glove);
+                break;
+            case 9: // 망토
+                current_image.setImageResource(R.drawable.cape);
+                future_image.setImageResource(R.drawable.cape);
+                break;
+            case 10: // 어깨장식
+                current_image.setImageResource(R.drawable.shoulder);
+                future_image.setImageResource(R.drawable.shoulder);
+                break;
+            case 11: // 벨트
+                current_image.setImageResource(R.drawable.belt);
+                future_image.setImageResource(R.drawable.belt);
+                break;
+            case 12: // 얼굴장식
+                current_image.setImageResource(R.drawable.face);
+                future_image.setImageResource(R.drawable.face);
+                break;
+            case 13: // 눈장식
+                current_image.setImageResource(R.drawable.eye);
+                future_image.setImageResource(R.drawable.eye);
+                break;
+            case 14: // 귀고리
+                current_image.setImageResource(R.drawable.earring);
+                future_image.setImageResource(R.drawable.earring);
+                break;
+            case 15: // 반지
+                current_image.setImageResource(R.drawable.ring);
+                future_image.setImageResource(R.drawable.ring);
+                break;
+            case 16: // 펜던트
+                current_image.setImageResource(R.drawable.pendant);
+                future_image.setImageResource(R.drawable.pendant);
+                break;
+            case 17: // 기계심장
+                current_image.setImageResource(R.drawable.machine_heart);
+                future_image.setImageResource(R.drawable.machine_heart);
+                break;
+        }
+    }
+
+    // future_image 테두리 설정
+    protected void setFutureBorder(int id) {
+        ImageView future_image = findViewById(R.id.future_image);
+        switch (id) {
+            case 2:
+                future_image.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_epic));
+                break;
+            case 3:
+                future_image.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_unique));
+                break;
+            case 4:
+                future_image.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_legendary));
+                break;
+        }
     }
 }

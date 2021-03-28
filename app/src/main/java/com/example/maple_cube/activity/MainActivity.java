@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     //0: 무기류, 1: 무기, 2: 보조무기, 3: 장비류, 4: 방어구, 5: 모자, 6: 상의, 7: 하의, 8: 신발, 9: 장갑, 10: 장신구
     private static final int[][] CATEGORIES = {{0, 1}, {0, 2}, {0}, {3, 4, 5}, {3, 4, 6}, {3, 4, 7}, {3, 4, 8}, {3, 4, 9}, {3, 4}, {3, 10}, {3}};
     private int category;
+    private int category_image;
 
     private int black_count = 0;
     private int red_count = 0;
@@ -125,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
         cube = BLACK_CUBE;
         potential_class = 1;
         bonus_class = 1;
-        setCategoryImage(0);
+        category_image = 0;
+        setCategoryImage(category_image);
         setPotentialDefault();
         setBonusDefault();
         setCount();
@@ -186,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("potential_class", potential_class);
                         intent.putExtra("bonus_class", bonus_class);
                         intent.putExtra("category", category);
+                        intent.putExtra("category_image", category_image);
                         startActivityForResult(intent, 1);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
@@ -280,8 +285,8 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 0: // CategoryActivity
                 if (resultCode == Activity.RESULT_OK) {
-                    int select = data.getIntExtra("select", -1);
-                    setCategoryImage(select);
+                    category_image = data.getIntExtra("select", -1);
+                    setCategoryImage(category_image);
                     setPotentialDefault();
                     setBonusDefault();
                     setColor();
