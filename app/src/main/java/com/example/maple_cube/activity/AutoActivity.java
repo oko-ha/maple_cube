@@ -3,22 +3,33 @@ package com.example.maple_cube.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListPopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.maple_cube.R;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AutoActivity extends Activity {
     private static final int RED_CUBE = 0;
@@ -37,17 +48,30 @@ public class AutoActivity extends Activity {
     private int selected_cube;
     private int selected_setting;
     private int selected_final;
+    private int option_index;
+    private int[] selected_option = {-1, -1, -1};
 
     private int number;
     private Button btn_OK;
 
-    private static final String[][] OPTION_STRING = {
-            {"보보○", "공공○", "마마○", "보보방", "보보공", "보공공", "보보마", "보마마"},
-            {"공공○", "마마○", "공공공", "마마마", "방공공", "방마마", "", ""},
-            {"크크○", "크크힘", "크크덱", "크크인", "크크럭", "크크크", "", ""},
-            {"올올올", "HpHpHp", "힘힘힘", "덱덱덱", "인인인", "럭럭럭", "", ""},
-            {"올올올", "HpHpHp", "힘힘힘", "덱덱덱", "인인인", "럭럭럭", "쿨쿨○", "쿨쿨쿨"},
-            {"올올올", "HpHpHp", "힘힘힘", "덱덱덱", "인인인", "럭럭럭", "쌍드메", "트리플 드메"}};
+    private static final String[][] ITEMS_STRING = {{"공격력", "마력", "몬스터 방어율 무시"},
+            {"보스 몬스터 공격 시 데미지"},
+            {"올스텟", "Hp", "STR", "DEX", "INT", "LUK"},
+            {"스킬 재사용 대기시간 감소"},
+            {"크리티컬 데미지"},
+            {"아이템 드롭률 or 메소 획득량"},
+            {"공격력", "마력"}};
+    private static final Integer[][] ITEMS_INTEGER = {{2, 3, 4},
+            {1},
+            {5, 6, 7, 8, 9, 10},
+            {11},
+            {12},
+            {13},
+            {2, 3}};
+    private static final String[] AUTO_OPTION =
+            {"상관 없음", "보스 몬스터 공격 시 데미지", "공격력", "마력", "몬스터 방어율 무시",
+                    "올스텟", "Hp", "STR", "DEX", "INT", "LUK", "스킬 재사용 대기시간 감소",
+                    "크리티컬 데미지", "아이템 드롭률 or 메소 획득량"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,38 +135,6 @@ public class AutoActivity extends Activity {
                     selected(R.id.btn_to_class);
                     select = 2;
                     break;
-                // view_auto_option
-                case R.id.btn_option_0:
-                    selected(R.id.btn_option_0);
-                    break;
-                case R.id.btn_option_1:
-                    selected(R.id.btn_option_1);
-                    select += 1;
-                    break;
-                case R.id.btn_option_2:
-                    selected(R.id.btn_option_2);
-                    select += 2;
-                    break;
-                case R.id.btn_option_3:
-                    selected(R.id.btn_option_3);
-                    select += 3;
-                    break;
-                case R.id.btn_option_4:
-                    selected(R.id.btn_option_4);
-                    select += 4;
-                    break;
-                case R.id.btn_option_5:
-                    selected(R.id.btn_option_5);
-                    select += 5;
-                    break;
-                case R.id.btn_option_6:
-                    selected(R.id.btn_option_6);
-                    select += 6;
-                    break;
-                case R.id.btn_option_7:
-                    selected(R.id.btn_option_7);
-                    select += 7;
-                    break;
                 // view_auto_number
                 case R.id.btn_plus_10:
                     plusNumber(10);
@@ -170,6 +162,33 @@ public class AutoActivity extends Activity {
                     select = 4;
                     break;
             }
+        }
+    };
+
+    // view_auto_option
+    AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+            // String selectedItem = (String) adapterView.getSelectedItem();
+            switch (adapterView.getId()) {
+                case R.id.spinner_0:
+                    selected_option[0] = getSelectedOption(option_index, pos, false);
+                    break;
+                case R.id.spinner_1:
+                    selected_option[1] = getSelectedOption(option_index, pos, true);
+                    break;
+                case R.id.spinner_2:
+                    if (option_index == 1)
+                        selected_option[2] = getSelectedOption(6, pos, true);
+                    else
+                        selected_option[2] = getSelectedOption(option_index, pos, true);
+                    break;
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
         }
     };
 
@@ -209,22 +228,48 @@ public class AutoActivity extends Activity {
                     switch (selection) {
                         case 0: // go to auto_option
                             changeView(2);
-                            final int[] CATEGORY_INDEX = {0, 0, 1, 4, 3, 3, 3, 2, 3, 5, 3};
-                            int index = CATEGORY_INDEX[category];
-                            select = index * 10;
-                            int max_i = 6;
-                            // set OnClickListener
-                            if (index == 0 || index == 4 || index == 5) {
-                                max_i = 8;
+                            final int[] CATEGORY_POTENTIAL_INDEX = {1, 1, 0, 3, 2, 2, 2, 4, 2, 5, 2};
+                            final int[] CATEGORY_BONUS_INDEX = {1, 1, 0, 3, 2, 2, 2, 4, 2, 2, 2};
+                            option_index = selected_cube != BONUS_CUBE ? CATEGORY_POTENTIAL_INDEX[category] : CATEGORY_BONUS_INDEX[category];
+                            ArrayList<String> items_spinner_0 = setArrayList(option_index, false);
+                            ArrayList<String> items_spinner_1 = setArrayList(option_index, true);
+                            ArrayList<String> items_spinner_2 = option_index == 1 ? setArrayList(6, true) : setArrayList(option_index, true);
+
+                            Spinner[] spinner = new Spinner[3];
+                            for (int i = 0; i < 3; i++) {
+                                spinner[i] = findViewById(getResources().getIdentifier("spinner_" + i, "id", getPackageName()));
+                                spinner[i].setOnItemSelectedListener(onItemSelectedListener);
+                                try {
+                                    Field popup = Spinner.class.getDeclaredField("mPopup");
+                                    popup.setAccessible(true);
+                                    ListPopupWindow window = (ListPopupWindow) popup.get(spinner[i]);
+                                    assert window != null;
+                                    window.setHeight(850);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            for (int i = 0; i < max_i; i++)
-                                findViewById(getResources().getIdentifier("btn_option_" + i, "id", getPackageName())).setOnClickListener(onClickListener);
-                            // set TextView
-                            TextView[] tv_option = new TextView[8];
-                            for (int i = 0; i < max_i; i++) {
-                                tv_option[i] = findViewById(getResources().getIdentifier("tv_option_" + i, "id", getPackageName()));
-                                tv_option[i].setText(OPTION_STRING[index][i]);
-                            }
+
+                            MySpinnerAdapter adapter_0 = new MySpinnerAdapter(getApplicationContext(),
+                                    android.R.layout.simple_spinner_item,
+                                    items_spinner_0);
+                            adapter_0.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinner[0].setAdapter(adapter_0);
+                            spinner[0].setSelection(adapter_0.getCount());
+
+                            MySpinnerAdapter adapter_1 = new MySpinnerAdapter(getApplicationContext(),
+                                    android.R.layout.simple_spinner_item,
+                                    items_spinner_1);
+                            adapter_1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinner[1].setAdapter(adapter_1);
+                            spinner[1].setSelection(adapter_1.getCount());
+
+                            MySpinnerAdapter adapter_2 = new MySpinnerAdapter(getApplicationContext(),
+                                    android.R.layout.simple_spinner_item,
+                                    items_spinner_2);
+                            adapter_2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinner[2].setAdapter(adapter_2);
+                            spinner[2].setSelection(adapter_2.getCount());
                             break;
                         case 1: // go to auto_number
                             changeView(3);
@@ -258,12 +303,11 @@ public class AutoActivity extends Activity {
                 }
                 break;
             case 2: // view_auto_option
-                if (selection != -1) {
-                    selected_final = selection;
+                if (hasMinusValue(selected_option)) {
                     Intent intent = new Intent();
                     intent.putExtra("selected_cube", selected_cube);
                     intent.putExtra("selected_setting", selected_setting);
-                    intent.putExtra("selected_final", selected_final);
+                    intent.putExtra("selected_option", selected_option);
                     setResult(RESULT_OK, intent);
                     finish();
                     overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
@@ -342,6 +386,95 @@ public class AutoActivity extends Activity {
         }
     }
 
+    // 선택 테두리 설정
+    protected void selected(int id) {
+        if (temp_id != -1) {
+            findViewById(temp_id).setBackgroundColor(Color.TRANSPARENT);
+        }
+        findViewById(id).setBackground(ContextCompat.getDrawable(this, R.drawable.border_selected));
+        temp_id = id;
+    }
+
+    protected boolean hasMinusValue(int[] list) {
+        for (int i : list)
+            if (i < 0)
+                return false;
+        return true;
+    }
+
+    // spinner를 위한 ArrayList에 item 추가
+    protected ArrayList<String> setArrayList(int index, boolean check) {
+        ArrayList<String> items = new ArrayList<>();
+        switch (index) {
+            case 0:
+                items.addAll(Arrays.asList(ITEMS_STRING[0]));
+                break;
+            case 1:
+                items.addAll(Arrays.asList(ITEMS_STRING[1]));
+                items.addAll(Arrays.asList(ITEMS_STRING[0]));
+                break;
+            case 2:
+                items.addAll(Arrays.asList(ITEMS_STRING[2]));
+                break;
+            case 3:
+                items.addAll(Arrays.asList(ITEMS_STRING[3]));
+                items.addAll(Arrays.asList(ITEMS_STRING[2]));
+                break;
+            case 4:
+                items.addAll(Arrays.asList(ITEMS_STRING[4]));
+                items.addAll(Arrays.asList(ITEMS_STRING[2]));
+                break;
+            case 5:
+                items.addAll(Arrays.asList(ITEMS_STRING[5]));
+                items.addAll(Arrays.asList(ITEMS_STRING[2]));
+                break;
+            case 6:
+                items.addAll(Arrays.asList(ITEMS_STRING[6]));
+                break;
+        }
+        if (check)
+            items.add("상관 없음");
+        items.add("옵션");
+        return items;
+    }
+
+    protected int getSelectedOption(int index, int pos, boolean check) {
+        int selected_option;
+        ArrayList<Integer> items = new ArrayList<>();
+        switch (index) {
+            case 0:
+                items.addAll(Arrays.asList(ITEMS_INTEGER[0]));
+                break;
+            case 1:
+                items.addAll(Arrays.asList(ITEMS_INTEGER[1]));
+                items.addAll(Arrays.asList(ITEMS_INTEGER[0]));
+                break;
+            case 2:
+                items.addAll(Arrays.asList(ITEMS_INTEGER[2]));
+                break;
+            case 3:
+                items.addAll(Arrays.asList(ITEMS_INTEGER[3]));
+                items.addAll(Arrays.asList(ITEMS_INTEGER[2]));
+                break;
+            case 4:
+                items.addAll(Arrays.asList(ITEMS_INTEGER[4]));
+                items.addAll(Arrays.asList(ITEMS_INTEGER[2]));
+                break;
+            case 5:
+                items.addAll(Arrays.asList(ITEMS_INTEGER[5]));
+                items.addAll(Arrays.asList(ITEMS_INTEGER[2]));
+                break;
+            case 6:
+                items.addAll(Arrays.asList(ITEMS_INTEGER[6]));
+                break;
+        }
+        if (check)
+            items.add(0);
+        items.add(-1);
+        selected_option = items.get(pos);
+        return selected_option;
+    }
+
     // btn_plus로 number 제어
     protected void plusNumber(int plus) {
         EditText et_number = findViewById(R.id.et_number);
@@ -355,15 +488,6 @@ public class AutoActivity extends Activity {
         }
         String text = Integer.toString(number);
         et_number.setText(text);
-    }
-
-    // 선택 테두리 설정
-    protected void selected(int id) {
-        if (temp_id != -1) {
-            findViewById(temp_id).setBackgroundColor(Color.TRANSPARENT);
-        }
-        findViewById(id).setBackground(ContextCompat.getDrawable(this, R.drawable.border_selected));
-        temp_id = id;
     }
 
     // view_auto_class에서 image 처리
@@ -486,6 +610,28 @@ public class AutoActivity extends Activity {
             case 4:
                 future_image.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_legendary));
                 break;
+        }
+    }
+
+    protected static class MySpinnerAdapter extends ArrayAdapter<String> {
+        public MySpinnerAdapter(Context context, int resource, List<String> objects) {
+            super(context, resource, objects);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            if (position == getCount()) {
+                ((TextView) view.findViewById(android.R.id.text1)).setText("");
+                ((TextView) view.findViewById(android.R.id.text1)).setHint(getItem(getCount()));
+            }
+            return view;
+        }
+
+        @Override
+        public int getCount() {
+            return super.getCount() - 1;
         }
     }
 }
