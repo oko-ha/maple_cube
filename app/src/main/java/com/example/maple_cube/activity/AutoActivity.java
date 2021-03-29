@@ -44,9 +44,9 @@ public class AutoActivity extends Activity {
     private static final String[][] OPTION_STRING = {
             {"보보○", "공공○", "마마○", "보보방", "보보공", "보공공", "보보마", "보마마"},
             {"공공○", "마마○", "공공공", "마마마", "방공공", "방마마", "", ""},
+            {"크크○", "크크힘", "크크덱", "크크인", "크크럭", "크크크", "", ""},
             {"올올올", "HpHpHp", "힘힘힘", "덱덱덱", "인인인", "럭럭럭", "", ""},
             {"올올올", "HpHpHp", "힘힘힘", "덱덱덱", "인인인", "럭럭럭", "쿨쿨○", "쿨쿨쿨"},
-            {"크크○", "크크힘", "크크덱", "크크인", "크크럭", "크크크", "", ""},
             {"올올올", "HpHpHp", "힘힘힘", "덱덱덱", "인인인", "럭럭럭", "쌍드메", "트리플 드메"}};
 
     @Override
@@ -117,24 +117,31 @@ public class AutoActivity extends Activity {
                     break;
                 case R.id.btn_option_1:
                     selected(R.id.btn_option_1);
+                    select += 1;
                     break;
                 case R.id.btn_option_2:
                     selected(R.id.btn_option_2);
+                    select += 2;
                     break;
                 case R.id.btn_option_3:
                     selected(R.id.btn_option_3);
+                    select += 3;
                     break;
                 case R.id.btn_option_4:
                     selected(R.id.btn_option_4);
+                    select += 4;
                     break;
                 case R.id.btn_option_5:
                     selected(R.id.btn_option_5);
+                    select += 5;
                     break;
                 case R.id.btn_option_6:
                     selected(R.id.btn_option_6);
+                    select += 6;
                     break;
                 case R.id.btn_option_7:
                     selected(R.id.btn_option_7);
+                    select += 7;
                     break;
                 // view_auto_number
                 case R.id.btn_plus_10:
@@ -202,11 +209,12 @@ public class AutoActivity extends Activity {
                     switch (selection) {
                         case 0: // go to auto_option
                             changeView(2);
-                            final int[] CATEGORY_INDEX = {0, 0, 1, 3, 2, 2, 2, 4, 2, 5, 2};
+                            final int[] CATEGORY_INDEX = {0, 0, 1, 4, 3, 3, 3, 2, 3, 5, 3};
                             int index = CATEGORY_INDEX[category];
+                            select = index * 10;
                             int max_i = 6;
                             // set OnClickListener
-                            if (index == 0 || index == 3 || index == 5) {
+                            if (index == 0 || index == 4 || index == 5) {
                                 max_i = 8;
                             }
                             for (int i = 0; i < max_i; i++)
@@ -250,15 +258,43 @@ public class AutoActivity extends Activity {
                 }
                 break;
             case 2: // view_auto_option
-                // TODO
+                if (selection != -1) {
+                    selected_final = selection;
+                    Intent intent = new Intent();
+                    intent.putExtra("selected_cube", selected_cube);
+                    intent.putExtra("selected_setting", selected_setting);
+                    intent.putExtra("selected_final", selected_final);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+                } else {
+                    Toast.makeText(getApplicationContext(), "옵션을 선택하세요.", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 3: // view_auto_number
-                // TODO
+                if (number > 0) {
+                    selected_final = number;
+                    Intent intent = new Intent();
+                    intent.putExtra("selected_cube", selected_cube);
+                    intent.putExtra("selected_setting", selected_setting);
+                    intent.putExtra("selected_final", selected_final);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+                } else {
+                    Toast.makeText(getApplicationContext(), "개수를 입력하세요.", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 4: // view_auto_class
                 if (selection != -1) {
                     selected_final = selection;
-                    // 데이터 넘겨주기
+                    Intent intent = new Intent();
+                    intent.putExtra("selected_cube", selected_cube);
+                    intent.putExtra("selected_setting", selected_setting);
+                    intent.putExtra("selected_final", selected_final);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
                 } else {
                     Toast.makeText(getApplicationContext(), "등급을 선택하세요.", Toast.LENGTH_SHORT).show();
                 }

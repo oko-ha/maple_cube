@@ -141,7 +141,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
-                    android:text="레전더리"
+                    android:text="레전드리"
                     android:textColor="@color/legendary"
                     android:textSize="20sp" />
             </TableRow>

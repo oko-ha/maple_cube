@@ -20,17 +20,20 @@ public class PotentialDB {
 
     // id에 해당하는 option 값 찾기
     public String getOption(String table_name, int id) {
-        String str;
-        Cursor cursor = null;
+        String option;
+        String query;
+        Cursor cursor;
         db = mHelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM " + table_name + " WHERE id=" + id, null);
+
+        query = ("SELECT * FROM " + table_name + " WHERE id=" + id);
+        cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst())
-            str = cursor.getString(cursor.getColumnIndex("option"));
+            option = cursor.getString(cursor.getColumnIndex("option"));
         else
-            str = null;
+            option = null;
         cursor.close();
         mHelper.close();
-        return str;
+        return option;
     }
 
     // category에 해당하는 id, weight, exception 값 찾기
@@ -62,7 +65,7 @@ public class PotentialDB {
     public int getException(String table_name, int id) {
         int exception;
         String query;
-        Cursor cursor = null;
+        Cursor cursor;
         db = mHelper.getReadableDatabase();
 
         query = ("SELECT * FROM " + table_name + " WHERE id=" + id);
@@ -76,6 +79,26 @@ public class PotentialDB {
         cursor.close();
         mHelper.close();
         return exception;
+    }
+
+    // id에 해당하는 auto_option 값 찾기
+    public int getAutoOption(String table_name, int id) {
+        int auto_option;
+        String query;
+        Cursor cursor;
+        db = mHelper.getReadableDatabase();
+
+        query = ("SELECT * FROM " + table_name + " WHERE id=" + id);
+        cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            auto_option = cursor.getInt(cursor.getColumnIndex("auto_option"));
+        } else {
+            auto_option = 0;
+        }
+        cursor.close();
+        mHelper.close();
+        return auto_option;
     }
 
 }

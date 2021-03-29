@@ -69,7 +69,7 @@
         app:layout_constraintTop_toTopOf="@+id/btn_potential" />
 
     <TextView
-        android:id="@+id/tv_potential_1"
+        android:id="@+id/tv_potential_0"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -78,23 +78,23 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_potential" />
 
     <TextView
-        android:id="@+id/tv_potential_2"
+        android:id="@+id/tv_potential_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
         app:layout_constraintStart_toStartOf="@+id/gl_left_1"
-        app:layout_constraintTop_toBottomOf="@+id/tv_potential_1" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_potential_0" />
 
     <TextView
-        android:id="@+id/tv_potential_3"
+        android:id="@+id/tv_potential_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/gl_left_1"
-        app:layout_constraintTop_toBottomOf="@+id/tv_potential_2" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_potential_1" />
 
     <TextView
         android:id="@+id/tv_bonus"
@@ -117,10 +117,10 @@
         android:background="@color/white"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/gl_left_1"
-        app:layout_constraintTop_toBottomOf="@+id/tv_potential_3" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_potential_2" />
 
     <TextView
-        android:id="@+id/tv_bonus_1"
+        android:id="@+id/tv_bonus_0"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -129,23 +129,23 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_bonus" />
 
     <TextView
-        android:id="@+id/tv_bonus_2"
+        android:id="@+id/tv_bonus_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
         app:layout_constraintStart_toStartOf="@+id/gl_left_1"
-        app:layout_constraintTop_toBottomOf="@+id/tv_bonus_1" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_bonus_0" />
 
     <TextView
-        android:id="@+id/tv_bonus_3"
+        android:id="@+id/tv_bonus_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toStartOf="@+id/gl_right_1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/gl_left_1"
-        app:layout_constraintTop_toBottomOf="@+id/tv_bonus_2" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_bonus_1" />
 
     <ImageButton
         android:id="@+id/btn_red_cube"
@@ -228,7 +228,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_bonus"
         app:layout_constraintEnd_toStartOf="@+id/gl_right_2"
         app:layout_constraintStart_toStartOf="@+id/gl_left_2"
-        app:layout_constraintTop_toBottomOf="@+id/tv_potential_3" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_potential_2" />
 
     <View
         android:id="@+id/view_bottom"
@@ -238,7 +238,7 @@
         android:background="#000"
         app:layout_constraintEnd_toStartOf="@+id/gl_right_2"
         app:layout_constraintStart_toStartOf="@+id/gl_left_2"
-        app:layout_constraintTop_toBottomOf="@+id/tv_bonus_3" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_bonus_2" />
 
     <View
         android:layout_width="1dp"

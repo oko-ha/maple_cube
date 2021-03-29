@@ -8,8 +8,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,20 +29,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private TextView tv_potential;
-    private TextView tv_potential_1;
-    private TextView tv_potential_2;
-    private TextView tv_potential_3;
-
+    private TextView[] tv_potential_option;
+    private int[] potential_auto_option;
     private TextView tv_bonus;
-    private TextView tv_bonus_1;
-    private TextView tv_bonus_2;
-    private TextView tv_bonus_3;
+    private TextView[] tv_bonus_option;
+    private int[] bonus_auto_option;
 
     private Button btn_potential;
     private Button btn_bonus;
@@ -84,6 +81,19 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Integer> bonusExceptions;
     private int bonusTempException;
 
+    private static final int[][] OPTION_INTEGER_0 =
+            {{1, 1}, {2, 2}, {3, 3}, {1, 1, 4}, {1, 1, 2}, {1, 2, 2}, {1, 1, 3}, {1, 3, 3}};
+    private static final int[][] OPTION_INTEGER_1 =
+            {{2, 2}, {3, 3}, {2, 2, 2}, {3, 3, 3}, {4, 2, 2}, {4, 3, 3}};
+    private static final int[][] OPTION_INTEGER_2 =
+            {{12, 12}, {12, 12, 7}, {12, 12, 8}, {12, 12, 9}, {12, 12, 10}, {12, 12, 12}};
+    private static final int[][] OPTION_INTEGER_3 =
+            {{5, 5, 5}, {6, 6, 6}, {7, 7, 7}, {8, 8, 8}, {9, 9, 9}, {10, 10, 10}};
+    private static final int[][] OPTION_INTEGER_4 =
+            {{5, 5, 5}, {6, 6, 6}, {7, 7, 7}, {8, 8, 8}, {9, 9, 9}, {10, 10, 10}, {11, 11}, {11, 11, 11}};
+    private static final int[][] OPTION_INTEGER_5 =
+            {{5, 5, 5}, {6, 6, 6}, {7, 7, 7}, {8, 8, 8}, {9, 9, 9}, {10, 10, 10}, {13, 13}, {13, 13, 13}};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,14 +106,15 @@ public class MainActivity extends AppCompatActivity {
         bonusDB = new BonusDB(mContext);
 
         tv_potential = findViewById(R.id.tv_potential);
-        tv_potential_1 = findViewById(R.id.tv_potential_1);
-        tv_potential_2 = findViewById(R.id.tv_potential_2);
-        tv_potential_3 = findViewById(R.id.tv_potential_3);
+        tv_potential_option = new TextView[3];
+        for (int i = 0; i < 3; i++)
+            tv_potential_option[i] = findViewById(getResources().getIdentifier("tv_potential_" + i, "id", getPackageName()));
+        potential_auto_option = new int[3];
 
         tv_bonus = findViewById(R.id.tv_bonus);
-        tv_bonus_1 = findViewById(R.id.tv_bonus_1);
-        tv_bonus_2 = findViewById(R.id.tv_bonus_2);
-        tv_bonus_3 = findViewById(R.id.tv_bonus_3);
+        tv_bonus_option = new TextView[3];
+        for (int i = 0; i < 3; i++)
+            tv_bonus_option[i] = findViewById(getResources().getIdentifier("tv_bonus_" + i, "id", getPackageName()));
 
         tv_red_count = findViewById(R.id.tv_red_count);
         tv_black_count = findViewById(R.id.tv_black_count);
@@ -183,9 +194,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 // AUTO
                 case R.id.btn_auto:
-                    if(autoStop){
-                        setAuto(-1);
-                    } else{
+                    if (autoStop) {
+                        setAuto(-1, -1, -1);
+                    } else {
                         intent = new Intent(getApplicationContext(), AutoActivity.class);
                         intent.putExtra("potential_class", potential_class);
                         intent.putExtra("bonus_class", bonus_class);
@@ -202,12 +213,12 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // Auto 기능
-    protected void setAuto(final int selection) {
+    protected void setAuto(final int selected_cube, final int selected_setting, final int selected_final) {
         // 큐브 선택 runnable
         final Runnable rollCube = new Runnable() {
             @Override
             public void run() {
-                switch (selection) {
+                switch (selected_cube) {
                     case RED_CUBE:
                         cube = RED_CUBE;
                         red_count++;
@@ -237,25 +248,104 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // 스레드
-        class autoThread implements Runnable {
+        // auto_option thread
+        class autoThread_1 implements Runnable {
             @Override
             public void run() {
-                while (potential_class < 4 && autoStop) {
-                    // 스레드에 runnable 전달
+                ArrayList<Integer> list = getOptionList(selected_final);
+                while (isInList(list, list.size()) && autoStop) {
+                    list = getOptionList(selected_final);
                     runOnUiThread(rollCube);
+
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(50);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
                 runOnUiThread(threadStop);
             }
+
+            protected boolean isInList(ArrayList<Integer> list, int number){
+                int num = 0;
+                for (int i = 0; i < 3; i++) {
+                    if (list.contains(potential_auto_option[i]))
+                        num++;
+                }
+                return num != number;
+            }
         }
 
-        autoThread autoThread = new autoThread();
-        Thread thread = new Thread(autoThread);
+        // auto_number thread
+        class autoThread_2 implements Runnable {
+            @Override
+            public void run() {
+                int i = 0;
+                while (i < selected_final && autoStop) {
+                    // 스레드에 runnable 전달
+                    runOnUiThread(rollCube);
+                    try {
+                        Thread.sleep(50);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    i++;
+                }
+                runOnUiThread(threadStop);
+            }
+        }
+
+        // auto_class thread
+        class autoThread_3 implements Runnable {
+            @Override
+            public void run() {
+                switch (selected_cube) {
+                    case RED_CUBE:
+                    case BLACK_CUBE:
+                        setPotential();
+                        break;
+                    case BONUS_CUBE:
+                        setBonus();
+                        break;
+                }
+                runOnUiThread(threadStop);
+            }
+
+            protected void setPotential() {
+                while (potential_class < selected_final && autoStop)
+                    running();
+            }
+
+            protected void setBonus() {
+                while (bonus_class < selected_final && autoStop)
+                    running();
+            }
+
+            protected void running() {
+                runOnUiThread(rollCube);
+                try {
+                    Thread.sleep(50);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        autoThread_1 autoThread_1 = new autoThread_1();
+        autoThread_2 autoThread_2 = new autoThread_2();
+        autoThread_3 autoThread_3 = new autoThread_3();
+        Thread thread = new Thread();
+        switch (selected_setting) {
+            case 0: // auto_option
+                thread = new Thread(autoThread_1);
+                break;
+            case 1: // auto_number
+                thread = new Thread(autoThread_2);
+                break;
+            case 2: // auto_class
+                thread = new Thread(autoThread_3);
+                break;
+        }
+
         if (autoStop) {
             autoStop = false;
         } else {
@@ -275,8 +365,43 @@ public class MainActivity extends AppCompatActivity {
             btn_auto.playAnimation();
             tv_auto.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
-
     }
+
+    // auto_option 설정 값에 따라 분류
+    protected ArrayList<Integer> getOptionList(int selection) {
+        int condition = selection / 10;
+        int index = selection % 10;
+        ArrayList<Integer> list = new ArrayList<>();
+        switch (condition) {
+            case 0:
+                for (int i : OPTION_INTEGER_0[index])
+                    list.add(i);
+                break;
+            case 1:
+                for (int i : OPTION_INTEGER_1[index])
+                    list.add(i);
+                break;
+            case 2:
+                for (int i : OPTION_INTEGER_2[index])
+                    list.add(i);
+                break;
+            case 3:
+                for (int i : OPTION_INTEGER_3[index])
+                    list.add(i);
+                break;
+            case 4:
+                for (int i : OPTION_INTEGER_4[index])
+                    list.add(i);
+                break;
+            case 5:
+                for (int i : OPTION_INTEGER_5[index])
+                    list.add(i);
+                break;
+        }
+
+        return list;
+    }
+
 
     // 타 Activity에서 data 받아오기
     @Override
@@ -294,23 +419,18 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case 1: // AutoActivity
-//                if (resultCode == Activity.RESULT_OK) {
-//                    cube = data.getIntExtra("select", -1);
-//                    Intent intent = new Intent(this, AutoActivity.class);
-//                    intent.putExtra("cube", cube);
-//                    startPopupActivity(intent, 2);
-//                    // setAuto(cube);
-//                }
+                if (resultCode == Activity.RESULT_OK) {
+                    int selected_cube;
+                    int selected_setting;
+                    int selected_final;
+                    selected_cube = data.getIntExtra("selected_cube", -1);
+                    selected_setting = data.getIntExtra("selected_setting", -1);
+                    selected_final = data.getIntExtra("selected_final", -1);
+                    setAuto(selected_cube, selected_setting, selected_final);
+                }
                 break;
         }
     }
-
-    // 팝업 activity 실행
-//    protected void startPopupActivity(Class<?> c, int requestCode) {
-//        Intent intent = new Intent(this, c);
-//        startActivityForResult(intent, requestCode);
-//        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//    }
 
     // 선택된 카테고리로 이미지 설정
     protected void setCategoryImage(int select) {
@@ -398,18 +518,22 @@ public class MainActivity extends AppCompatActivity {
         potential_class = 1;
         black_count = 0;
         red_count = 0;
-        tv_potential_1.setText("잠재능력 1");
-        tv_potential_2.setText("잠재능력 2");
-        tv_potential_3.setText("잠재능력 3");
+        int num;
+        for (int i = 0; i < 3; i++) {
+            num = i + 1;
+            tv_potential_option[i].setText("잠재능력 " + num);
+        }
     }
 
     // 밑잠재를 초기 레어 값으로 설정
     protected void setBonusDefault() {
         bonus_class = 1;
         bonus_count = 0;
-        tv_bonus_1.setText("잠재능력 1");
-        tv_bonus_2.setText("잠재능력 2");
-        tv_bonus_3.setText("잠재능력 3");
+        int num;
+        for (int i = 0; i < 3; i++) {
+            num = i + 1;
+            tv_bonus_option[i].setText("잠재능력 " + num);
+        }
     }
 
     // 개수 설정
@@ -472,7 +596,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 등급 업 이펙트
-    protected void class_up(){
+    protected void class_up() {
         final RelativeLayout layout_class_up = findViewById(R.id.layout_class_up);
         final LottieAnimationView lottie_class_up = findViewById(R.id.lottie_class_up);
         layout_class_up.setVisibility(View.VISIBLE);
@@ -531,24 +655,37 @@ public class MainActivity extends AppCompatActivity {
                     potential_class = 4;
                 break;
         }
-        if (tempClass != potential_class){
+        if (tempClass != potential_class) {
             class_up();
         }
 
+        int[][] potential = new int[3][2];
+
         // 첫 번째 옵션
-        tv_potential_1.setText(convertPotentialText(potential_class, getPotentialResult(potential_class)));
+        potential[0][0] = potential_class;
+        potential[0][1] = getPotentialResult(potential_class);
         // 두 번째 옵션 이탈율 적용
         randValue = (int) (Math.random() * 1000) + 1;
-        if (randValue <= probability[cube][second_option_up])
-            tv_potential_2.setText(convertPotentialText(potential_class, getPotentialResult(potential_class)));
-        else
-            tv_potential_2.setText(convertPotentialText(potential_class - 1, getPotentialResult(potential_class - 1)));
+        if (randValue <= probability[cube][second_option_up]) {
+            potential[1][0] = potential_class;
+            potential[1][1] = getPotentialResult(potential_class);
+        } else {
+            potential[1][0] = potential_class - 1;
+            potential[1][1] = getPotentialResult(potential_class - 1);
+        }
         randValue = (int) (Math.random() * 1000) + 1;
         // 세 번째 옵션 이탈율 적용
-        if (randValue <= probability[cube][third_option_up])
-            tv_potential_3.setText(convertPotentialText(potential_class, getPotentialResult(potential_class)));
-        else
-            tv_potential_3.setText(convertPotentialText(potential_class - 1, getPotentialResult(potential_class - 1)));
+        if (randValue <= probability[cube][third_option_up]) {
+            potential[2][0] = potential_class;
+            potential[2][1] = getPotentialResult(potential_class);
+        } else {
+            potential[2][0] = potential_class - 1;
+            potential[2][1] = getPotentialResult(potential_class - 1);
+        }
+        for (int i = 0; i < 3; i++) {
+            potential_auto_option[i] = potentialDB.getAutoOption(CLASS_LIST[potential[i][0]], potential[i][1]);
+            tv_potential_option[i].setText(convertPotentialText(potential[i][0], potential[i][1]));
+        }
     }
 
     // 밑잠재 큐브 굴리기
@@ -583,7 +720,7 @@ public class MainActivity extends AppCompatActivity {
                     bonus_class = 4;
                 break;
         }
-        if (tempClass != bonus_class){
+        if (tempClass != bonus_class) {
             class_up();
         }
 
@@ -602,20 +739,31 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
+        int[][] bonus = new int[3][2];
+
         // 첫 번째 옵션
-        tv_bonus_1.setText(convertBonusText(bonus_class, getBonusResult(bonus_class)));
+        bonus[0][0] = bonus_class;
+        bonus[0][1] = getBonusResult(bonus_class);
         // 두 번째 옵션 이탈율 적용
         randValue = (int) (Math.random() * 1000000) + 1;
-        if (randValue <= probability[option_up])
-            tv_bonus_2.setText(convertBonusText(bonus_class, getBonusResult(bonus_class)));
-        else
-            tv_bonus_2.setText(convertBonusText(bonus_class - 1, getBonusResult(bonus_class - 1)));
+        if (randValue <= probability[option_up]) {
+            bonus[1][0] = bonus_class;
+            bonus[1][1] = getBonusResult(bonus_class);
+        } else {
+            bonus[1][0] = bonus_class - 1;
+            bonus[1][1] = getBonusResult(bonus_class - 1);
+        }
         // 세 번째 옵션 이탈율 적용
         randValue = (int) (Math.random() * 1000000) + 1;
-        if (randValue <= probability[option_up])
-            tv_bonus_3.setText(convertBonusText(bonus_class, getBonusResult(bonus_class)));
-        else
-            tv_bonus_3.setText(convertBonusText(bonus_class - 1, getBonusResult(bonus_class - 1)));
+        if (randValue <= probability[option_up]) {
+            bonus[2][0] = bonus_class;
+            bonus[2][1] = getBonusResult(bonus_class);
+        } else {
+            bonus[2][0] = bonus_class - 1;
+            bonus[2][1] = getBonusResult(bonus_class - 1);
+        }
+        for (int i = 0; i < 3; i++)
+            tv_bonus_option[i].setText(convertBonusText(bonus[i][0], bonus[i][1]));
     }
 
     // potential.db에서 현재 등급에 맞는 option id를 가져옴
@@ -626,7 +774,7 @@ public class MainActivity extends AppCompatActivity {
         int result;
         // exception 검사
         for (int i = 0; i < list.size(); i++) {
-            if (potentialExceptions.size() != 0){
+            if (potentialExceptions.size() != 0) {
                 for (int j = 0; j < potentialExceptions.size(); j++)
                     if (!list.get(i)[2].equals(potentialExceptions.get(j)))
                         map.put(list.get(i)[0], (double) list.get(i)[1]);
@@ -641,11 +789,10 @@ public class MainActivity extends AppCompatActivity {
         if (exception > 0) {
             if (exception < 3)
                 potentialExceptions.add(exception);
+            else if (potentialTempException != exception)
+                potentialTempException = exception;
             else
-                if(potentialTempException != exception)
-                    potentialTempException = exception;
-                else
-                    potentialExceptions.add(exception);
+                potentialExceptions.add(exception);
         }
         return result;
     }
@@ -658,7 +805,7 @@ public class MainActivity extends AppCompatActivity {
         int result;
         // exception 검사
         for (int i = 0; i < list.size(); i++) {
-            if (bonusExceptions.size() != 0){
+            if (bonusExceptions.size() != 0) {
                 for (int j = 0; j < bonusExceptions.size(); j++)
                     if (!list.get(i)[2].equals(bonusExceptions.get(j)))
                         map.put(list.get(i)[0], (double) list.get(i)[1]);
@@ -673,8 +820,7 @@ public class MainActivity extends AppCompatActivity {
         if (exception > 0) {
             if (exception < 3)
                 bonusExceptions.add(exception);
-            else
-            if(bonusTempException != exception)
+            else if (bonusTempException != exception)
                 bonusTempException = exception;
             else
                 bonusExceptions.add(exception);
