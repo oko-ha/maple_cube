@@ -36,6 +36,8 @@ import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private long backPressedTime = 0;
+
     private TextView tv_potential;
     private TextView[] tv_potential_option;
     private int[] potential_auto_option;
@@ -322,37 +324,31 @@ public class MainActivity extends AppCompatActivity {
     // Auto 기능
     protected void setAuto(final int selected_cube, final int selected_setting, final int selected_final, final int[] selected_option) {
         // 큐브 선택 runnable
-        final Runnable rollCube = new Runnable() {
-            @Override
-            public void run() {
-                switch (selected_cube) {
-                    case RED_CUBE:
-                        cube = RED_CUBE;
-                        red_count++;
-                        rollPotentialCube();
-                        break;
-                    case BLACK_CUBE:
-                        cube = BLACK_CUBE;
-                        black_count++;
-                        rollPotentialCube();
-                        break;
-                    case BONUS_CUBE:
-                        bonus_count++;
-                        rollBonusCube();
-                        break;
-                }
-                setColor();
-                setCount();
+        final Runnable rollCube = () -> {
+            switch (selected_cube) {
+                case RED_CUBE:
+                    cube = RED_CUBE;
+                    red_count++;
+                    rollPotentialCube();
+                    break;
+                case BLACK_CUBE:
+                    cube = BLACK_CUBE;
+                    black_count++;
+                    rollPotentialCube();
+                    break;
+                case BONUS_CUBE:
+                    bonus_count++;
+                    rollBonusCube();
+                    break;
             }
+            setColor();
+            setCount();
         };
 
         // 스레드가 중지될 때 실행되는 runnable
-        final Runnable threadStop = new Runnable() {
-            @Override
-            public void run() {
-                changeAuto();
-                autoStop = false;
-            }
+        final Runnable threadStop = () -> {
+            changeAuto();
+            autoStop = false;
         };
 
         // auto_option thread
@@ -397,19 +393,25 @@ public class MainActivity extends AppCompatActivity {
             }
 
             protected boolean isInPotentialList(ArrayList<Integer> list, int number) {
+                ArrayList<Integer> tempList = new ArrayList<>(list);
                 int num = 0;
                 for (int i = 0; i < 3; i++) {
-                    if (list.contains(potential_auto_option[i]))
+                    if (tempList.contains(potential_auto_option[i])) {
+                        tempList.remove((Integer) potential_auto_option[i]);
                         num++;
+                    }
                 }
                 return num != number;
             }
 
             protected boolean isInBonusList(ArrayList<Integer> list, int number) {
+                ArrayList<Integer> tempList = new ArrayList<>(list);
                 int num = 0;
                 for (int i = 0; i < 3; i++) {
-                    if (list.contains(bonus_auto_option[i]))
+                    if (tempList.contains(bonus_auto_option[i])) {
+                        tempList.remove((Integer) bonus_auto_option[i]);
                         num++;
+                    }
                 }
                 return num != number;
             }
@@ -1014,5 +1016,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return result;
+    }
+
+    @Override
+    public void onBackPressed() {
+        final long FINISH_INTERVAL_TIME = 2000;
+
+        long tempTime = System.currentTimeMillis();
+        long intervalTime = tempTime - backPressedTime;
+
+        if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime) {
+            super.onBackPressed();
+        } else {
+            backPressedTime = tempTime;
+            Toast.makeText(getApplicationContext(), "'이전' 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

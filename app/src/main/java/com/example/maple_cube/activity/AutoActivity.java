@@ -170,7 +170,6 @@ public class AutoActivity extends Activity {
     AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-            // String selectedItem = (String) adapterView.getSelectedItem();
             switch (adapterView.getId()) {
                 case R.id.spinner_0:
                     selected_option[0] = getSelectedOption(option_index, pos, false);
