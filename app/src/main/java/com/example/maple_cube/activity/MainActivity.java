@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +30,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -129,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
         bonus_class = 1;
         category_image = 0;
         setCategoryImage(category_image);
-        setPotentialDefault();
-        setBonusDefault();
+        setPotentialDefault(1);
+        setBonusDefault(1);
         setCount();
         setColor();
 
@@ -156,11 +155,11 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 // 윗잠재 등급 선택
                 case R.id.btn_potential:
-                    setPotentialDefault();
+                    setMenu(view, true);
                     break;
                 // 밑잠재 등급 선택
                 case R.id.btn_bonus:
-                    setBonusDefault();
+                    setMenu(view, false);
                     break;
                 // 레드 큐브
                 case R.id.btn_red_cube:
@@ -199,6 +198,44 @@ public class MainActivity extends AppCompatActivity {
             setCount();
         }
     };
+
+    // 등급 선택 메뉴
+    protected void setMenu(View view, boolean potential) {
+        final PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+        getMenuInflater().inflate(R.menu.menu_class, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.potential_rare:
+                    if (potential)
+                        setPotentialDefault(1);
+                    else
+                        setBonusDefault(1);
+                    break;
+                case R.id.potential_epic:
+                    if (potential)
+                        setPotentialDefault(2);
+                    else
+                        setBonusDefault(2);
+                    break;
+                case R.id.potential_unique:
+                    if (potential)
+                        setPotentialDefault(3);
+                    else
+                        setBonusDefault(3);
+                    break;
+                case R.id.potential_legendary:
+                    if (potential)
+                        setPotentialDefault(4);
+                    else
+                        setBonusDefault(4);
+                    break;
+            }
+            setColor();
+            setCount();
+            return false;
+        });
+        popupMenu.show();
+    }
 
     // Auto 기능
     protected void setAuto(final int selected_cube, final int selected_setting, final int selected_final, final int[] selected_option) {
@@ -285,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return num != number;
             }
+
             protected boolean isInBonusList(ArrayList<Integer> list, int number) {
                 int num = 0;
                 for (int i = 0; i < 3; i++) {
@@ -406,8 +444,8 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     category_image = data.getIntExtra("select", -1);
                     setCategoryImage(category_image);
-                    setPotentialDefault();
-                    setBonusDefault();
+                    setPotentialDefault(1);
+                    setBonusDefault(1);
                     setColor();
                     setCount();
                 }
@@ -417,7 +455,7 @@ public class MainActivity extends AppCompatActivity {
                     int selected_cube;
                     int selected_setting;
                     int selected_final;
-                    int[] selected_option = new int[3];
+                    int[] selected_option;
                     selected_cube = data.getIntExtra("selected_cube", -1);
                     selected_setting = data.getIntExtra("selected_setting", -1);
                     selected_final = data.getIntExtra("selected_final", -1);
@@ -510,8 +548,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 윗잠재를 초기 레어 값으로 설정
-    protected void setPotentialDefault() {
-        potential_class = 1;
+    protected void setPotentialDefault(int class_number) {
+        potential_class = class_number;
         black_count = 0;
         red_count = 0;
         int num;
@@ -522,8 +560,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 밑잠재를 초기 레어 값으로 설정
-    protected void setBonusDefault() {
-        bonus_class = 1;
+    protected void setBonusDefault(int class_number) {
+        bonus_class = class_number;
         bonus_count = 0;
         int num;
         for (int i = 0; i < 3; i++) {
