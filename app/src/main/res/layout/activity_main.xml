@@ -55,6 +55,21 @@
         app:layout_constraintStart_toStartOf="@+id/gl_left_1"
         app:layout_constraintTop_toBottomOf="@+id/btn_select_category" />
 
+    <RelativeLayout
+        android:id="@+id/menu_potential_class"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/btn_potential"
+        app:layout_constraintTop_toBottomOf="@+id/btn_potential">
+
+        <include
+            layout="@layout/view_potential_class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/tv_potential"
         android:layout_width="wrap_content"
@@ -118,6 +133,21 @@
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/gl_left_1"
         app:layout_constraintTop_toBottomOf="@+id/tv_potential_2" />
+
+    <RelativeLayout
+        android:id="@+id/menu_bonus_class"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/btn_bonus"
+        app:layout_constraintTop_toBottomOf="@+id/btn_bonus">
+
+        <include
+            layout="@layout/view_bonus_class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_bonus_0"

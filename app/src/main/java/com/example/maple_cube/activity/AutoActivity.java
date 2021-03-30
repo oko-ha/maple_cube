@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -613,6 +614,7 @@ public class AutoActivity extends Activity {
         }
     }
 
+    // spinner adapter
     protected static class MySpinnerAdapter extends ArrayAdapter<String> {
         public MySpinnerAdapter(Context context, int resource, List<String> objects) {
             super(context, resource, objects);
@@ -633,5 +635,11 @@ public class AutoActivity extends Activity {
         public int getCount() {
             return super.getCount() - 1;
         }
+    }
+
+    // 화면 밖 터치 통제
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return event.getAction()!=MotionEvent.ACTION_OUTSIDE;
     }
 }

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -71,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
     private PotentialDB potentialDB;
     private BonusDB bonusDB;
 
+    private RelativeLayout menu_potential_class;
+    private RelativeLayout menu_bonus_class;
+    private boolean menu_flag;
+
     private TextView tv_auto;
     private LottieAnimationView btn_auto;
     private boolean autoStop;
@@ -111,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
         btn_potential = findViewById(R.id.btn_potential);
         btn_bonus = findViewById(R.id.btn_bonus);
 
+        menu_potential_class = findViewById(R.id.menu_potential_class);
+        menu_bonus_class = findViewById(R.id.menu_bonus_class);
+
         btn_auto = findViewById(R.id.btn_auto);
         tv_auto = findViewById(R.id.tv_auto);
 
@@ -121,12 +129,21 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_black_cube).setOnClickListener(onClickListener);
         findViewById(R.id.btn_red_cube).setOnClickListener(onClickListener);
         findViewById(R.id.btn_bonus_cube).setOnClickListener(onClickListener);
+        findViewById(R.id.potential_class_rare).setOnClickListener(onClickListener);
+        findViewById(R.id.potential_class_epic).setOnClickListener(onClickListener);
+        findViewById(R.id.potential_class_unique).setOnClickListener(onClickListener);
+        findViewById(R.id.potential_class_legendary).setOnClickListener(onClickListener);
+        findViewById(R.id.bonus_class_rare).setOnClickListener(onClickListener);
+        findViewById(R.id.bonus_class_epic).setOnClickListener(onClickListener);
+        findViewById(R.id.bonus_class_unique).setOnClickListener(onClickListener);
+        findViewById(R.id.bonus_class_legendary).setOnClickListener(onClickListener);
 
         // Initialize
         cube = BLACK_CUBE;
         potential_class = 1;
         bonus_class = 1;
         category_image = 0;
+        menu_flag = true;
         setCategoryImage(category_image);
         setPotentialDefault(1);
         setBonusDefault(1);
@@ -155,11 +172,36 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 // 윗잠재 등급 선택
                 case R.id.btn_potential:
-                    setMenu(view, true);
+                    setMenu(true);
                     break;
                 // 밑잠재 등급 선택
                 case R.id.btn_bonus:
-                    setMenu(view, false);
+                    setMenu(false);
+                    break;
+                // 등급 선택
+                case R.id.potential_class_rare:
+                    selectPotentialClass(1);
+                    break;
+                case R.id.potential_class_epic:
+                    selectPotentialClass(2);
+                    break;
+                case R.id.potential_class_unique:
+                    selectPotentialClass(3);
+                    break;
+                case R.id.potential_class_legendary:
+                    selectPotentialClass(4);
+                    break;
+                case R.id.bonus_class_rare:
+                    selectBonusClass(1);
+                    break;
+                case R.id.bonus_class_epic:
+                    selectBonusClass(2);
+                    break;
+                case R.id.bonus_class_unique:
+                    selectBonusClass(3);
+                    break;
+                case R.id.bonus_class_legendary:
+                    selectBonusClass(4);
                     break;
                 // 레드 큐브
                 case R.id.btn_red_cube:
@@ -200,41 +242,79 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // 등급 선택 메뉴
-    protected void setMenu(View view, boolean potential) {
-        final PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-        getMenuInflater().inflate(R.menu.menu_class, popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            switch (menuItem.getItemId()) {
-                case R.id.potential_rare:
-                    if (potential)
-                        setPotentialDefault(1);
-                    else
-                        setBonusDefault(1);
-                    break;
-                case R.id.potential_epic:
-                    if (potential)
-                        setPotentialDefault(2);
-                    else
-                        setBonusDefault(2);
-                    break;
-                case R.id.potential_unique:
-                    if (potential)
-                        setPotentialDefault(3);
-                    else
-                        setBonusDefault(3);
-                    break;
-                case R.id.potential_legendary:
-                    if (potential)
-                        setPotentialDefault(4);
-                    else
-                        setBonusDefault(4);
-                    break;
+    protected void setMenu(boolean potential) {
+        if (menu_flag) {
+            if (potential) {
+                menu_potential_class.setVisibility(View.VISIBLE);
+                btn_bonus.setEnabled(false);
+                menu_potential_class.bringToFront();
+            } else {
+                menu_bonus_class.setVisibility(View.VISIBLE);
+                btn_potential.setEnabled(false);
+                menu_bonus_class.bringToFront();
             }
-            setColor();
-            setCount();
-            return false;
-        });
-        popupMenu.show();
+            menu_flag = false;
+        } else {
+            if (potential) {
+                menu_potential_class.setVisibility(View.GONE);
+                btn_bonus.setEnabled(true);
+            } else {
+                menu_bonus_class.setVisibility(View.GONE);
+                btn_potential.setEnabled(true);
+            }
+            menu_flag = true;
+        }
+    }
+
+    protected void selectPotentialClass(int selected_class) {
+        switch (selected_class) {
+            case 1:
+                potential_class = 1;
+                break;
+            case 2:
+                potential_class = 2;
+                break;
+            case 3:
+                potential_class = 3;
+                break;
+            case 4:
+                potential_class = 4;
+                break;
+        }
+        menu_flag = true;
+        btn_bonus.setEnabled(true);
+        menu_potential_class.setVisibility(View.GONE);
+    }
+
+    protected void selectBonusClass(int selected_class) {
+        switch (selected_class) {
+            case 1:
+                bonus_class = 1;
+                break;
+            case 2:
+                bonus_class = 2;
+                break;
+            case 3:
+                bonus_class = 3;
+                break;
+            case 4:
+                bonus_class = 4;
+                break;
+        }
+        menu_flag = true;
+        btn_potential.setEnabled(true);
+        menu_bonus_class.setVisibility(View.GONE);
+    }
+
+    // 화면 밖 터치 시 메뉴 가리기
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        menu_flag = true;
+        btn_potential.setEnabled(true);
+        btn_bonus.setEnabled(true);
+        menu_potential_class.setVisibility(View.GONE);
+        menu_bonus_class.setVisibility(View.GONE);
+        return event.getAction() != MotionEvent.ACTION_OUTSIDE;
     }
 
     // Auto 기능
