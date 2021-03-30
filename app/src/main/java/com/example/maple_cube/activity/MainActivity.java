@@ -284,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
         menu_flag = true;
         btn_bonus.setEnabled(true);
         menu_potential_class.setVisibility(View.GONE);
+        setPotentialDefault(potential_class);
     }
 
     protected void selectBonusClass(int selected_class) {
@@ -304,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
         menu_flag = true;
         btn_potential.setEnabled(true);
         menu_bonus_class.setVisibility(View.GONE);
+        setBonusDefault(bonus_class);
     }
 
     // 화면 밖 터치 시 메뉴 가리기
