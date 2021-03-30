@@ -639,6 +639,7 @@ public class MainActivity extends AppCompatActivity {
             num = i + 1;
             tv_potential_option[i].setText("잠재능력 " + num);
         }
+        potential_auto_option = new int[3];
     }
 
     // 밑잠재를 초기 레어 값으로 설정
@@ -650,6 +651,7 @@ public class MainActivity extends AppCompatActivity {
             num = i + 1;
             tv_bonus_option[i].setText("잠재능력 " + num);
         }
+        bonus_auto_option = new int[3];
     }
 
     // 개수 설정
